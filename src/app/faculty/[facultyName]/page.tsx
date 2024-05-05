@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react"
+import { useSearchParams } from 'next/navigation'
 import CourseCodeCard from "@/components/cards/CourseCodeCard"
 import LineChart from "@/components/charts/LineChart"
 import BarChart from "@/components/charts/BarChart"
@@ -8,17 +9,34 @@ import DropDown from "@/components/DropDown"
 // Fetch relevant bid data from api here
 const dummyData = {
     title: "This is a dummy chart",
-    labels: ["fa101", "da102", "acc111", "fa112", "fa113", "ma114"], // Array of labels
+    x_axis_label: "Bidding Window",
+    y_axis_label: "Bid Price",
+    x_axis_values: ["fa101", "da102", "acc111", "fa112", "fa113", "ma114"], // Array of labels
     datasets: [
       {
         data: [10, 25, 20, 38, 44, 50, 52, 53, 56], // Array of data values
-        label: "Bid Price", // Label for the dataset
         backgroundColor: "rgba(75, 192, 192, 0.6)", // Background color for the bars
         borderColor: "rgba(75, 192, 192, 1)", // Border color for the bars
         borderWidth: 2, // Border width for the bars
       }
     ]
 }
+
+const dummyData2 = {
+    title: "Loading",
+    x_axis_label: "Bidding Window",
+    y_axis_label: "Bid Price",
+    x_axis_values: ["Loading"], // Array of labels
+    datasets: [
+      {
+        data: [0], // Array of data values
+        backgroundColor: "rgba(75, 192, 192, 0.6)", // Background color for the bars
+        borderColor: "rgba(75, 192, 192, 1)", // Border color for the bars
+        borderWidth: 2, // Border width for the bars
+      }
+    ]
+}
+
 // RMB THAT WE CAN ONLY MAP ARRAYS
 const dummyCourseCodeArray = [
     { faculty: 'law', courses: ["law101", "law102", "law111", "law112", "law113", "law114"] },
@@ -58,6 +76,7 @@ const academicTerms = [
 export default function page({ params }: { params: { facultyName: string }}) {
 
     // use .find() to search through array, facultyData is assigned the hashmap in the array where the faculty name matched
+    const facultyName = params.facultyName
     const facultyData = dummyCourseCodeArray.find(item => item.faculty === params.facultyName)
 
     const [selectedCourse, setSelectedCourse] = useState<string | null>(null)
@@ -66,7 +85,22 @@ export default function page({ params }: { params: { facultyName: string }}) {
     const [selectedBiddingWindow, setSelectedBiddingWindow] = useState<string | null>(null)
 
     const [chartType, setChartType] = useState<string>("bar")
+    const [chartDataOverview, setChartDataOverview] = useState<any>(dummyData2)
     const [chartData, setChartData] = useState<any>(dummyData)
+
+    useEffect(() => {
+        const fetchCourseMinMaxMeanMedianMedianData = async () => {
+            try {
+                // try to fetch from api end point for the Course Min Max Mean Median Median Data
+                const response = await fetch("http://127.0.0.1:8000/coursedata/overview/COR-STAT1202")
+                const chartDataOverview = await response.json()
+                setChartDataOverview(chartDataOverview)
+            } catch (error) {
+                console.error("Error:" + error)
+            }
+        }
+        fetchCourseMinMaxMeanMedianMedianData()
+    }, []);
 
     function dropDownHandler(option: string, category: string) {
         switch (category) {
@@ -115,6 +149,7 @@ export default function page({ params }: { params: { facultyName: string }}) {
             <div className="flex min-h-screen flex-rows px-12 py-4 justify-center">
                 <div>
                     <div>
+                        <BarChart chartData={chartDataOverview}/>
                         {(chartType === "bar") && <BarChart chartData={dummyData}/>}
                         {(chartType === "line") && <LineChart chartData={dummyData}/>}
                     </div>

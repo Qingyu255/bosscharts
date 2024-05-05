@@ -21,10 +21,11 @@ ChartJS.register(
 type chartProps = {
   chartData: {
     title: string,
-    labels: string[],
+    x_axis_label: String,
+    y_axis_label: String,
+    x_axis_values: string[],
     datasets: {
       data: number[],
-      label: string,
       backgroundColor: string,
       borderColor: string,
       borderWidth: number,
@@ -33,8 +34,12 @@ type chartProps = {
 }
 
 export default function BarChart({ chartData }: chartProps) {
+  if (!chartData) {
+    // return if chartData is null. For example when course code not found
+    return null
+  }
   // display course codes uppercase
-  const upperCaseLabels = chartData.labels.map((label) => label.toUpperCase())
+  const upperCaseLabels = chartData.x_axis_values.map((label) => label.toUpperCase())
   const options = {
     scales: {
       x: {
@@ -42,7 +47,7 @@ export default function BarChart({ chartData }: chartProps) {
         labels: upperCaseLabels,
         title: {
           display: true,
-          text: 'Bidding Window',
+          text: chartData.x_axis_label,
           font: {
             size: 15,
             family: 'Arial',
@@ -53,7 +58,7 @@ export default function BarChart({ chartData }: chartProps) {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Median Bid Price',
+          text: chartData.y_axis_label,
           font: {
             size: 15,
             family: 'Arial',

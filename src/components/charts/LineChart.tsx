@@ -21,10 +21,11 @@ ChartJS.register(
 type chartProps = {
     chartData: {
       title: string,
+      x_axis_label: String,
+      y_axis_label: String,
       labels: string[],
       datasets: {
         data: number[],
-        label: string,
         backgroundColor: string,
         borderColor: string,
         borderWidth: number,
@@ -33,6 +34,10 @@ type chartProps = {
   }
 
 export default function LineChart({ chartData }: chartProps) {
+  if (!chartData) {
+    // return if chartData is null. For example when course code not found
+    return null
+  }
   const options = {
       scales: {
         x: {
