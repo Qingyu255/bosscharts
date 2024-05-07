@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react"
 
 type DropdownProps = {
@@ -14,15 +14,7 @@ export default function DropDown( props : DropdownProps ) {
     const category = props.category
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
-    const [searchText, setSearchText] = useState<string>("")
-    const [filteredOptions, setFilteredOptions] = useState<string[]>(props.options || [])
-
-    const[selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
-
-    // const selectedOption = searchText
-    // ? `Select ${category}`
-    // : `${category}: ${searchText.toUpperCase()}`;
-
+    const [selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
 
     function selectionHandler(option: string) {
         props.onSelect(option)
@@ -37,15 +29,6 @@ export default function DropDown( props : DropdownProps ) {
                 </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-                {/* <DropdownItem key={0} className="p-1">
-                    <input
-                        type="text"
-                        placeholder={`Search ${category}`}
-                        value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
-                        className="w-full border rounded-md p-1"
-                    />
-                </DropdownItem> */}
                 {options.map((option, index) => (
                     <DropdownItem key={index + 1}>
                         {/* block: Full Width: Block-level elements expand to occupy the full width of their containing block. This means that they stretch from the left edge to the right edge of their parent container. */}

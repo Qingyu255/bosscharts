@@ -23,7 +23,7 @@ type chartProps = {
       title: string,
       x_axis_label: String,
       y_axis_label: String,
-      labels: string[],
+      x_axis_values: string[],
       datasets: {
         data: number[],
         backgroundColor: string,
@@ -38,14 +38,16 @@ export default function LineChart({ chartData }: chartProps) {
     // return if chartData is null. For example when course code not found
     return null
   }
+
+  const upperCaseLabels = chartData.x_axis_values.map((label) => label.toUpperCase())
   const options = {
       scales: {
         x: {
           // type: 'category', // Use 'category' scale for x-axis
-          // labels: chartData.labels,
+          labels: upperCaseLabels,
           title: {
             display: true,
-            text: "Bidding Window",
+            text: chartData.x_axis_label,
             font: {
               size: 15,
               // style: "italic",
@@ -58,7 +60,7 @@ export default function LineChart({ chartData }: chartProps) {
           // min: 10,
           title: {
             display: true,
-            text: "Median Bid Price",
+            text: chartData.y_axis_label,
             font: {
               size: 15,
               // style: "italic",

@@ -23,8 +23,15 @@ export default function page({ params } : {params: {courseCode: string}}) {
     const courseCode = params.courseCode
     const [chartDataOverview, setChartDataOverview] = useState<any>(null)
     const [chartDataInstructorOverview, setChartDataInstructorOverview] = useState<any>(null)
-    const [error, setError] = useState<any>(null)
-    
+    const [error, setError] = useState<string>("")
+
+    const [courseInstructorsArr, setCourseInstructorsArr] = useState<string[]>()
+    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string[]>()
+
+    function handleInstructorSelect(instructorSelected: string) {
+
+    }
+
     useEffect(() => {
         const fetchCourseMinMaxMeanMedianMedianData = async () => {
             try {
@@ -35,7 +42,7 @@ export default function page({ params } : {params: {courseCode: string}}) {
                 }
                 const chartDataOverview = await response.json()
                 setChartDataOverview(chartDataOverview)
-            } catch (error) {
+            } catch (error: any) {
                 setError(error)
                 console.error(error)
             }
@@ -49,14 +56,34 @@ export default function page({ params } : {params: {courseCode: string}}) {
                 }
                 const chartDataInstructorOverview = await response.json()
                 setChartDataInstructorOverview(chartDataInstructorOverview)
-            } catch (error) {
-                setError(error)
+            } catch (error: any) {
+                setError(error.message)
                 console.error(error)
             }
         }
+
+
         fetchCourseMinMaxMeanMedianMedianData()
         fetch_all_instructor_median_median_bid_by_course_code()
     }, [courseCode]);
+
+    useEffect(() => {
+        const fetch_instructors_who_teach_course_code = async () => {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/instructordata/${courseCode}`)
+                if (!response.ok) {
+                    throw new Error(`${response.status}`)
+                }
+                const jsonObj = await response.json()
+                const courseInstructorsArr = jsonObj.data
+                setCourseInstructorsArr(courseInstructorsArr)
+            } catch (error: any) {
+                setError(error.message)
+                console.error(error)
+            }
+        }
+        fetch_instructors_who_teach_course_code()
+    }, [])
 
     return (
         <div className='flex flex-col min-h-screen'>
@@ -68,7 +95,7 @@ export default function page({ params } : {params: {courseCode: string}}) {
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                        <span className="font-medium">Error: </span>{error.message}
+                        <span className="font-medium">Error: </span>{error}
                     </div>
                 </div>
             ) 
@@ -80,9 +107,16 @@ export default function page({ params } : {params: {courseCode: string}}) {
                     <div className='flex justify-center'>
                         <BarChart chartData={chartDataInstructorOverview} />
                     </div>
+                    <div className='flex justify-center'>
+                        <LineChart chartData={chartDataInstructorOverview} />
+                    </div>
                     <div className='flex justify-left m-20 items-center'>
-                        Select Instructor: 
-                        <DropDown></DropDown>
+                        <DropDown 
+                            category='Instructor'
+                            onSelect={handleInstructorSelect}
+                            options={courseInstructorsArr}
+                        >
+                        </DropDown>
                     </div>
                     
                 </div>
