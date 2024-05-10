@@ -22,7 +22,7 @@ import VisualiseTrendAcrossSemesters from '@/components/interactiveCharts/Visual
 
 export default function page({ params } : {params: {courseCode: string}}) {
 
-    const apiURL = "http://127.0.0.1:8000"
+    const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const courseCode: string = params.courseCode.toUpperCase()
     // const [courseCode, setCourseCode] = useState<string>(params.courseCode)

@@ -3,7 +3,7 @@ import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
 
 export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode: string}) {
-    const apiURL = "http://127.0.0.1:8000"
+    const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
 
@@ -71,13 +71,13 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
         // Fetch dropdown options array for select instructor on page refresh
         const fetch_instructors_who_teach_course_code = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/instructordata/instructor/${courseCode}`)
+                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
                 if (!response.ok) {
                     throw new Error(`${response.status}`)
                 }
                 const jsonPayload = await response.json()
-                const courseInstructorsArr = jsonPayload.data
-                setCourseInstructorsDropdownArr(courseInstructorsArr)
+                setCourseInstructorsDropdownArr(jsonPayload.data)
+
             } catch (error: any) {
                 setError(error)
                 console.error(error)

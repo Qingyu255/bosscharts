@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang='en'> 
       <body className={inter.className}>
         <Providers>
-          <div className='bg-slate-100'>
+          <div>
             <Navbar />
             {children}
             <Footer />

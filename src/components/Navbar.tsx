@@ -4,36 +4,28 @@ import Image from 'next/image'
 import SearchBar from "./SearchBar"
 
 export default function Navbar() {
+    const siteName = "BOSS CHARTS"
     return (
         <>
-            <div className="flex bg-blue-300 items-center rounded-b-md">
-                    <Link href='/' className="flex items-center text-2xl font-bold px-5 py-2 gap-x-2">
+            <div id="navbar" className="flex items-center justify-between border-b-2 md:px-3 md:py-2">
+                    <Link href='/' className="flex items-center text-sm md:text-xl font-bold px-3 md:px-4 py-2 gap-x-2 md:gap-x-4">
                         <Image
                             src="/logo.png"
                             width={50}
                             height={50}
                             alt="logo"
                         />
-                        BOSS Analytics
+                        {siteName}
                     </Link>
-                <div className="flex justify-end">
-                    
-                </div>
                 
-                <ul className="flex flex-row space-x-6 ml-auto p-3 pr-12 text-md">
-                    <li className="w-80">
+                <div className="flex flex-row text-md">
+                    <div className="flex justify-center">
                         <SearchBar />
-                    </li>
-                    <li className="flex items-center">
-                        <Link href="/">Home</Link>
-                    </li>
-                    <li className="flex items-center">
-                        <Link href="/login">Login</Link>
-                    </li>
-                    <li className="flex items-center">
+                    </div>
+                    <div className="flex items-center px-2 md:px-4 text-[11px] md:text-sm font-medium">
                         <Link href="/">Donate</Link>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </>
     )
