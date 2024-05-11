@@ -7,77 +7,65 @@ import {
   Tooltip,
   BarController,
   BarElement,
+  Title,
+  Legend
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  Tooltip, 
   BarController,
-  BarElement
-  )
+  BarElement,
+  Tooltip,
+  Title,
+  Legend
+)
 
-type chartProps = {
-  chartData: {
-    title: string,
-    x_axis_label: String,
-    y_axis_label: String,
-    x_axis_values: string[],
-    datasets: {
-      data: number[],
-      backgroundColor: string,
-      borderColor: string,
-      borderWidth: number,
-    }[]
-  }
+type Dataset = {
+  label: string
+  data: number[]
+  borderColor: string
+  backgroundColor: string
+};
+
+
+type ChartData = {
+  responsive: boolean
+  labels: string[]
+  datasets: Dataset[]
+};
+
+type chartAttributes = {
+  title: string
+  chartData: ChartData
+  width: string
+  height: string
 }
 
-export default function BarChart({ chartData }: chartProps) {
+export default function BarChart({ title, chartData, width, height }: chartAttributes) {
   if (!chartData) {
     // return if chartData is null. For example when course code not found
     return null
   }
-  // display course codes uppercase
-  const upperCaseLabels = chartData.x_axis_values.map((label) => label.toUpperCase())
+
   const options = {
-    scales: {
-      x: {
-        // type: 'category',
-        labels: upperCaseLabels,
-        title: {
-          display: true,
-          text: chartData.x_axis_label,
-          font: {
-            size: 15,
-            family: 'Arial',
-          },
-        },
+    plugins: {
+      legend: {
+        position: 'top' as const,
       },
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: chartData.y_axis_label,
-          font: {
-            size: 15,
-            family: 'Arial',
-          },
-        },
+      title: {
+        display: true,
+        text: title,
       },
     },
-  };
+    maintainAspectRatio: false
+  }
 
   return (
     <div className='flex flex-col'>
-      <h1 className='flex justify-center underline font-semibold'>{chartData.title}</h1>
-      <div
-        style={{
-          width: '810px',
-          height: '400px',
-        }}
-      >
-        <Bar data={chartData} options={options} />
+      <div className='sm:px-8'>
+        <Bar data={chartData} options={options} width={width} height={height}/>
       </div>
     </div>
   );

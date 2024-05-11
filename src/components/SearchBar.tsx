@@ -14,6 +14,7 @@ export default function SearchBar({ search }: { search?: string }) {
     const [query] = useDebounce(text, 750)
     const [uniqueCourses, setUniqueCourses] = useState<string[]>([])
     const [searchSuggestions, setSearchSuggestions] = useState<string[]>([])
+    const [searched, setSearched] = useState<boolean>(false)
 
     useEffect(() => {
         const fetchAllCourseCodes = async() => {
@@ -23,6 +24,21 @@ export default function SearchBar({ search }: { search?: string }) {
         }
         fetchAllCourseCodes()
     }, [])
+
+    const search_not_found_message: string = "course code not found"
+    const getSuggestions = (searchText: string) => {
+        let searchSuggestions = uniqueCourses.filter(course =>course.toUpperCase().includes(searchText.toUpperCase()))
+        if (searchSuggestions.length == 0) {
+            searchSuggestions = [search_not_found_message]
+            setSearchSuggestions(searchSuggestions)
+        } else if (searchSuggestions.length == 1) {
+            if (searchSuggestions[0] != text) {
+                setSearchSuggestions(searchSuggestions)
+            }
+        } else {
+        setSearchSuggestions(searchSuggestions)
+        }
+    }
 
     useEffect(() => {
         if (initialRender.current) {
@@ -34,17 +50,10 @@ export default function SearchBar({ search }: { search?: string }) {
         }
     }, [query])
 
-    const search_not_found_message: string = "course code not found"
-    const getSuggestions = (searchText: string) => {
-        let searchSuggestions = uniqueCourses.filter(course =>course.toUpperCase().includes(searchText.toUpperCase()))
-        if (searchSuggestions.length == 0) {
-            searchSuggestions = [search_not_found_message]
-        }
-        setSearchSuggestions(searchSuggestions)
-    }
-
     const handleSearchSelectedSuggestion = (courseCode: string) => {
-        router.push(`/course/${courseCode}`);
+        router.push(`/course/${courseCode}`)
+        setText(courseCode)
+        setSearchSuggestions([])
     };
 
     return (
@@ -63,7 +72,7 @@ export default function SearchBar({ search }: { search?: string }) {
                         aria-hidden='true'
                     />
                 </div>
-                {searchSuggestions.length > 0 && (
+                {searchSuggestions.length > 0 && !searched && (
                     <ul className='absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-auto'>
                         {searchSuggestions.map((searchSuggestion, index) => (
                             <li

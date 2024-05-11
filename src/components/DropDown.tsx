@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react"
 
 type DropdownProps = {
@@ -15,6 +15,30 @@ export default function DropDown( props : DropdownProps ) {
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
     const [selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
+    // To ensure that the latest state is used in our resize event handler, we can use useRef to keep track of the current values
+    const selectedOptionRef = useRef(selectedOption)
+
+    // Update ref whenever selectedOption changes
+    useEffect(() => {
+        selectedOptionRef.current = selectedOption
+    }, [selectedOption])
+
+    useEffect(() => {
+        const handleResize = () => {
+            // this strips the `${category}: ` from the selected option displayed is viewport becomes too small
+            if (selectedOptionRef.current.split(`${category}: `).length > 1 && selectedOptionRef.current !== `Select ${category}` && window.innerWidth < 500) {
+                const string_without_select_word = selectedOptionRef.current.split(`${category}: `)[1]
+                setSelectedOption(string_without_select_word)
+            }
+        }
+        window.addEventListener("resize", handleResize)
+    
+        handleResize()
+
+        return () => {
+            window.removeEventListener("resize", handleResize)
+        }
+    }, [selectedOption])
 
     function selectionHandler(option: string) {
         props.onSelect(option)
@@ -24,7 +48,7 @@ export default function DropDown( props : DropdownProps ) {
     return (
         <Dropdown>
             <DropdownTrigger>
-                <Button variant="bordered">
+                <Button variant="bordered" className="text-[11px] sm:text-sm">
                     {selectedOption}
                 </Button>
             </DropdownTrigger>

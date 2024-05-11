@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'boss analytics',
+  title: 'BOSS Charts',
   description: 'SMU BOSS Bid Price Analytics',
   icons: {
     icon: "/logo.png"

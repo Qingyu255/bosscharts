@@ -5,12 +5,15 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
+  BarElement,
   PointElement,
   LineElement,
   Title,
-  Legend
+  Legend,
+  LineController,
+  BarController,
 } from "chart.js"
-import { Line }  from 'react-chartjs-2'
+import { Chart, ChartProps }  from 'react-chartjs-2'
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
@@ -18,9 +21,12 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Tooltip,
   Title,
-  Legend
+  Legend,
+  LineController,
+  BarController
 )
 
 type Dataset = {
@@ -38,13 +44,14 @@ type ChartData = {
 };
 
 type chartAttributes = {
+  type: string
   title: string
   chartData: ChartData
   width: string
   height: string
 }
 
-export default function LineChart( {title, chartData, width, height} : chartAttributes ) {
+export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
   if (!chartData) {
     // return if chartData is null. For example when course code not found
     return null
@@ -65,7 +72,7 @@ export default function LineChart( {title, chartData, width, height} : chartAttr
 
   return (
     <div className='flex flex-col justify-center items-center'>
-      <Line data={chartData} options={options} width={width} height={height}/>
+      <Chart type={type} data={chartData} options={options} width={width} height={height}/>
     </div>
   )
 }

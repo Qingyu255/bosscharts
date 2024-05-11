@@ -1,9 +1,32 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
+import ErrorPopUp from "@/components/ErrorPopUp"
 
-export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode: string}) {
+type Dataset = {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+};
+  
+type ChartData = {
+    responsive: boolean;
+    labels: string[];
+    datasets: Dataset[];
+};
+
+type chartAttributes = {
+    width: string
+    height: string
+    title: string
+    chartData: ChartData
+  }
+
+export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
+    
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
+    const initComponentsMounted = useRef(false)
 
     const [error, setError] = useState<any>(null)
 
@@ -17,14 +40,14 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
     const [hideDetailedCharts, setHideDetailedCharts] = useState<boolean>(false)
 
     // Manage state for filter by specified bidding window: to plot bid price against all regular terms for specified window
-    const [chartDataInstructorsBiddingWindow, setChartDataInstructorsBiddingWindow] = useState<any>(null)
+    const [chartDataInstructorsBiddingWindow, setChartDataInstructorsBiddingWindow] = useState<chartAttributes>()
 
     const fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
             const response = await fetch(`${apiURL}/instructordata/bidding_windows_available/${courseCode}/${instructorName}`)
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
-            setBiddingWindowDropdownArr(biddingWindowDropdownOptions)
+            setBiddingWindowDropdownArr(biddingWindowDropdownOptions || [])
         } catch (error: any) {
             // setError(error)
             // console.error(error)
@@ -34,15 +57,11 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
 
     const handleInstructorSelect = (instructorSelected: string) => {
         setCourseInstructorSelected(instructorSelected)
-        console.log("Instructor Selected: " + instructorSelected)
-        
         // reset dropdown options
         setSelectedBiddingWindow("")
         setBiddingWindowDropdownArr([])
-
         // hide charts until bidding window selected
         setHideDetailedCharts(true)
-
         // Now we fetch the windows in which this course has been bid for in the past
         fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         // Make bidding window dropdown visible
@@ -51,16 +70,13 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
 
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleBiddingWindowSelect = async (biddingWindow: string) => {
-        console.log("Bidding Window Selected: " + biddingWindow)
         setSelectedBiddingWindow(biddingWindow)
         try {
             const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
             const chartData = await response.json()
             setChartDataInstructorsBiddingWindow(chartData)
-
             // show charts again
             setHideDetailedCharts(false)
-
         } catch (error: any) {
             setError(error)
             console.error(error)
@@ -72,9 +88,9 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
         const fetch_instructors_who_teach_course_code = async () => {
             try {
                 const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
-                if (!response.ok) {
-                    throw new Error(`${response.status}`)
-                }
+                // if (!response.ok) {
+                //     throw new Error(`${response.status}`)
+                // }
                 const jsonPayload = await response.json()
                 setCourseInstructorsDropdownArr(jsonPayload.data)
 
@@ -85,22 +101,28 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
         }
         fetch_instructors_who_teach_course_code()
     }, [])
+    
+    useEffect(() => {
+        // scroll behaviour: will not scroll on first page load
+        if (initComponentsMounted.current) {
+            window.scrollTo({
+            top: document.body.scrollHeight - 20,
+            behavior: 'smooth'
+            })
+        } else {
+            initComponentsMounted.current = true
+        }
+    }, [chartDataInstructorsBiddingWindow])
+
     return (
         <>
+            <h1 className='text-xl md:text-2xl font-extrabold'>Bid Price Trend Across Semesters</h1>
             {error ? (
-                <div className="flex items-center p-4 m-4 text-sm rounded-xl text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                    <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <div>
-                        <span className="font-medium">Error: </span>{error.message}
-                    </div>
-                </div>
+                <ErrorPopUp error={error}></ErrorPopUp>
             ) 
             : (
-                <div className='flex flex-col gap-y-5'>
-                    <div className='flex flex-row justify-left mx-20 items-center gap-x-5'>
+                <div className='flex flex-col gap-y-5 pb-5'>
+                    <div className='flex flex-row justify-leftitems-center gap-x-5'>
                         <DropDown 
                             category='Instructor'
                             onSelect={handleInstructorSelect}
@@ -117,11 +139,19 @@ export default function VisualiseTrendAcrossSemesters({courseCode} : {courseCode
                         </DropDown>
                     )}
                     </div>
-                    <div className='flex justify-center'>
-                        {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) && (
-                            <LineChart chartData={chartDataInstructorsBiddingWindow} />
-                        )}
-                    </div>
+                    {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) && (
+                        <div className='px-5 sm:px-8'>
+                            <LineChart 
+                                title={chartDataInstructorsBiddingWindow.title}
+                                chartData={chartDataInstructorsBiddingWindow.chartData} 
+                                width={width}
+                                height={height}
+                                key={`${width}-${height}`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
+                                // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
+                            />
+                        </div>
+                        
+                    )}
                 </div>
             )}
         </>

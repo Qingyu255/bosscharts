@@ -1,10 +1,23 @@
 import React from 'react'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
     <>
-      <footer className="bg-blue-300 p-3 text-center">
-        <p className='text-sm'>Boss Analytics 2023</p>
+      <footer id="footer" className="flex justify-center items-center p-3 border-t-2 gap-x-3">
+        <Image
+          src="/logo.png"
+          width={30}
+          height={30}
+          alt="logo"
+        />
+        <p className='text-sm font-semibold'>BOSS CHARTS</p>
+        <Image
+          src="/logo.png"
+          width={30}
+          height={30}
+          alt="logo"
+        />
       </footer>
     </>
   )
