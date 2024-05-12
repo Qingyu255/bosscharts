@@ -32,7 +32,7 @@ export default function SearchBar({ search }: { search?: string }) {
             searchSuggestions = [search_not_found_message]
             setSearchSuggestions(searchSuggestions)
         } else if (searchSuggestions.length == 1) {
-            if (searchSuggestions[0] != text) {
+            if (searchSuggestions[0].split(":")[0] != text) {
                 setSearchSuggestions(searchSuggestions)
             }
         } else {
@@ -50,7 +50,8 @@ export default function SearchBar({ search }: { search?: string }) {
         }
     }, [query])
 
-    const handleSearchSelectedSuggestion = (courseCode: string) => {
+    const handleSearchSelectedSuggestion = (courseCodeAndNameString: string) => {
+        const courseCode = courseCodeAndNameString.split(":")[0]
         router.push(`/course/${courseCode}`)
         setText(courseCode)
         setSearchSuggestions([])

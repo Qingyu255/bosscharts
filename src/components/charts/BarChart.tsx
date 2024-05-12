@@ -27,7 +27,7 @@ type Dataset = {
   data: number[]
   borderColor: string
   backgroundColor: string
-};
+}
 
 
 type ChartData = {

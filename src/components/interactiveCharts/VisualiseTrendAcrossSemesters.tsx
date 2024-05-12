@@ -2,25 +2,29 @@ import React, { useState, useEffect, useRef } from 'react'
 import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
 import ErrorPopUp from "@/components/ErrorPopUp"
+import MultitypeChart from '../charts/MultitypeChart';
 
-type Dataset = {
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-};
+type MultitypeChartDataset = {
+    label: string
+    data: number[]
+    borderColor: string
+    backgroundColor: string
+    fill: boolean
+    yAxisID: string
+}
   
 type ChartData = {
-    responsive: boolean;
-    labels: string[];
-    datasets: Dataset[];
-};
+    responsive: boolean
+    labels: string[]
+    datasets: MultitypeChartDataset[]
+}
 
 type chartAttributes = {
-    width: string
-    height: string
+    type?: string
     title: string
     chartData: ChartData
+    width: string
+    height: string
   }
 
 export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
@@ -67,14 +71,48 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         // Make bidding window dropdown visible
         setIsBiddingWindowDropdownVisible(true)
     }
+    const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
+        try {
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
+            // if (!response.ok) {
+            //     throw new Error(`${response.status}`)
+            // }
+            const jsonPayload = await response.json()
+            const vacanciesDatasets = jsonPayload.data
+
+            // we will update the existing chart data with the extra vacancies data
+            if (chartDataInstructorsBiddingWindow && chartDataInstructorsBiddingWindow.chartData) {
+                // this makes sure datasets is defined and is an array
+                // const currentDatasets = chartDataInstructorsBiddingWindow.chartData.datasets || []
+                const firstDatasetUpdated = {
+                    ...chartDataInstructorsBiddingWindow.chartData.datasets[0],
+                    type: 'line',
+                    yAxisID: "y"
+                }
+                const updatedVacanciesInChartData = {
+                    ...chartDataInstructorsBiddingWindow,
+                    chartData: {
+                        ...chartDataInstructorsBiddingWindow.chartData,
+                        datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
+                    }
+                }
+                setChartDataInstructorsBiddingWindow(updatedVacanciesInChartData)
+            } else {
+                console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
+            }
+        } catch (error: any) {
+            setError(error)
+            console.error(error)
+        }
+    }
 
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleBiddingWindowSelect = async (biddingWindow: string) => {
         setSelectedBiddingWindow(biddingWindow)
         try {
             const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
-            const chartData = await response.json()
-            setChartDataInstructorsBiddingWindow(chartData)
+            const jsonPayload = await response.json()
+            update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
             // show charts again
             setHideDetailedCharts(false)
         } catch (error: any) {
@@ -88,9 +126,10 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         const fetch_instructors_who_teach_course_code = async () => {
             try {
                 const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
-                // if (!response.ok) {
-                //     throw new Error(`${response.status}`)
-                // }
+                if (!response.ok) {
+                    const errorResponse = await response.json()
+                    throw new Error(`${response.status}: ${errorResponse.detail}`)
+                }
                 const jsonPayload = await response.json()
                 setCourseInstructorsDropdownArr(jsonPayload.data)
 
@@ -122,7 +161,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
-                    <div className='flex flex-row justify-leftitems-center gap-x-5'>
+                    <div className='flex flex-row justify-left items-center gap-x-5'>
                         <DropDown 
                             category='Instructor'
                             onSelect={handleInstructorSelect}
@@ -141,7 +180,8 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                     </div>
                     {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) && (
                         <div className='px-5 sm:px-8'>
-                            <LineChart 
+                            <MultitypeChart 
+                                type="line"
                                 title={chartDataInstructorsBiddingWindow.title}
                                 chartData={chartDataInstructorsBiddingWindow.chartData} 
                                 width={width}

@@ -28,14 +28,13 @@ type Dataset = {
   data: number[]
   borderColor: string
   backgroundColor: string
-};
-
+}
 
 type ChartData = {
   responsive: boolean
   labels: string[]
   datasets: Dataset[]
-};
+}
 
 type chartAttributes = {
   title: string
