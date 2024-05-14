@@ -73,7 +73,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     }
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
             // if (!response.ok) {
             //     throw new Error(`${response.status}`)
             // }
