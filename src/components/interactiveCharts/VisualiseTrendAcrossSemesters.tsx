@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
 import ErrorPopUp from "@/components/ErrorPopUp"
@@ -30,7 +30,6 @@ type chartAttributes = {
 export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
     
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
-    const initComponentsMounted = useRef(false)
 
     const [error, setError] = useState<any>(null)
 
@@ -74,9 +73,9 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
         try {
             const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
-            // if (!response.ok) {
-            //     throw new Error(`${response.status}`)
-            // }
+            if (!response.ok) {
+                throw new Error(`${response.status}`)
+            }
             const jsonPayload = await response.json()
             const vacanciesDatasets = jsonPayload.data
 
@@ -106,6 +105,13 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         }
     }
 
+    const scrollToDiv = (id: string) => {
+        const element = document.getElementById(id)
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+        }
+    }
+
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleBiddingWindowSelect = async (biddingWindow: string) => {
         setSelectedBiddingWindow(biddingWindow)
@@ -115,6 +121,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
             update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
             // show charts again
             setHideDetailedCharts(false)
+            scrollToDiv("VisualiseTrendAcrossSemesters")
         } catch (error: any) {
             setError(error)
             console.error(error)
@@ -132,7 +139,6 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                 }
                 const jsonPayload = await response.json()
                 setCourseInstructorsDropdownArr(jsonPayload.data)
-
             } catch (error: any) {
                 setError(error)
                 console.error(error)
@@ -140,22 +146,16 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         }
         fetch_instructors_who_teach_course_code()
     }, [])
-    
+
     useEffect(() => {
-        // scroll behaviour: will not scroll on first page load
-        if (initComponentsMounted.current) {
-            window.scrollTo({
-            top: document.body.scrollHeight - 20,
-            behavior: 'smooth'
-            })
-        } else {
-            initComponentsMounted.current = true
+        if (chartDataInstructorsBiddingWindow) {
+            scrollToDiv("VisualiseTrendAcrossSemesters")
         }
     }, [chartDataInstructorsBiddingWindow])
 
     return (
         <>
-            <h1 className='text-xl md:text-2xl font-extrabold'>Bid Price Trend Across Semesters</h1>
+            <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Window</h1>
             {error ? (
                 <ErrorPopUp error={error}></ErrorPopUp>
             ) 

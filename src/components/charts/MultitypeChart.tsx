@@ -60,41 +60,52 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
   }
 
   const options = {
+    maintainAspectRatio: false,
     tooltips: {
       enabled: true,
       mode: 'label',
     },
     plugins: {
       legend: {
-        mode: 'index' as const,
-        intersect: false,
+        position: 'top',
       },
       stacked: false,
       title: {
         display: true,
         text: title,
-      },
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          type: 'linear',
+      }
+    },
+    scales: {
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        title: {
           display: true,
-          position: 'left',
-          grid: {
-            color: "rgba(53, 162, 235, 0.5)"
-          }
+          text: "Median 'Median Bid' Price",
+          color: 'rgb(0, 0, 0)',  // Color to match the line
         },
-        y1: {
-          type: 'linear',
+        ticks: {
+          color: 'rgba(75, 192, 192, 1)',  // Color to match the line
+        }
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        grid: {
+          drawOnChartArea: false,
+        },
+        title: {
           display: true,
-          position: 'right',
-          grid: {
-            drawOnChartArea: false,
-            display: false
-          }
+          text: 'Vacancies',
+          color: 'rgb(0, 0, 0)',  // Color to match the bar
+        },
+        ticks: {
+          color: 'rgb(255, 99, 132)',  // Color to match the bar
         },
       },
-    }
+    },
   }
 
   return (

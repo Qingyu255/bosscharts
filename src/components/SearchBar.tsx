@@ -59,10 +59,10 @@ export default function SearchBar({ search }: { search?: string }) {
 
     return (
         <>
-            <div className='rounded-xl w-[200px] md:w-64 text-sm md:text-md'>
+            <div className='rounded-xl w-[200px] sm:w-80 text-sm md:text-md'>
                 <input
                     value={text}
-                    placeholder='Search Course Code'
+                    placeholder='Search Course Code/Course Name'
                     // Maybe can add functionality to search professor too
                     onChange={e => setText(e.target.value)}
                     className='block w-full rounded-md border-0 px-2 py-1.5 md:px-3 md:py-2 text-[12px] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-sky-600 sm:text-sm '
@@ -74,11 +74,11 @@ export default function SearchBar({ search }: { search?: string }) {
                     />
                 </div>
                 {searchSuggestions.length > 0 && !searched && (
-                    <ul className='absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-auto'>
+                    <ul className='absolute z-10 w-fit bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto'>
                         {searchSuggestions.map((searchSuggestion, index) => (
                             <li
                                 key={index}
-                                className='p-2 hover:bg-gray-200 cursor-pointer'
+                                className='p-2 hover:bg-gray-200 cursor-pointer break-words'
                                 onClick={() => { 
                                     if (searchSuggestion !== search_not_found_message) {
                                         // will not be able to select on course code not found option (prevents redundant search)

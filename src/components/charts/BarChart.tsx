@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -49,7 +49,37 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
     return null
   }
 
+  const clickTimeout = useRef<NodeJS.Timeout | null>(null)
+  const clickCount = useRef<number>(0)
+
+  const handleClick = (event: any, elements: any) => {
+    const chart = elements[0].element.$context.chart
+    if (chart.options.plugins.title.text !== "Median and Mean 'Median Bid' Price (across all sections) against Instructors") {
+      return
+      // as we only want double click functionality for the above title
+    }
+    clickCount.current += 1
+
+    if (clickCount.current === 1) {
+      clickTimeout.current = setTimeout(() => {
+        clickCount.current = 0
+      }, 300) // 300ms timeout for detecting double-click
+    } else {
+      if (clickTimeout.current) {
+        clearTimeout(clickTimeout.current);
+        clickCount.current = 0
+
+        if (elements.length > 0) {
+          const instructor_name = chart.data.labels[elements[0].index] as string;
+          const link = "https://www.afterclass.io/professor/smu-" + instructor_name.split(" ").join("-").toLowerCase()
+          window.open(link, '_blank') // will open link in a new tab
+        }
+      }
+    }
+  }
+
   const options = {
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top' as const,
@@ -59,7 +89,8 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
         text: title,
       },
     },
-    maintainAspectRatio: false
+
+    onClick: handleClick
   }
 
   return (

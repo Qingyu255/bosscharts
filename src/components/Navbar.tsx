@@ -23,7 +23,7 @@ export default function Navbar() {
                         <SearchBar />
                     </div>
                     <div className="flex items-center px-2 md:px-4 text-[11px] md:text-sm font-medium">
-                        <Link href="/">Donate</Link>
+                        <Link href="/">Burger</Link>
                     </div>
                 </div>
             </div>

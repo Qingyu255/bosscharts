@@ -15,6 +15,7 @@ export default function DropDown( props : DropdownProps ) {
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
     const [selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
+    
     // To ensure that the latest state is used in our resize event handler, we can use useRef to keep track of the current values
     const selectedOptionRef = useRef(selectedOption)
 
