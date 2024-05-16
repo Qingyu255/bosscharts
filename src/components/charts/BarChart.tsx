@@ -53,6 +53,10 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
   const clickCount = useRef<number>(0)
 
   const handleClick = (event: any, elements: any) => {
+    if (elements.length === 0) {
+      return
+    }
+    
     const chart = elements[0].element.$context.chart
     if (chart.options.plugins.title.text !== "Median and Mean 'Median Bid' Price (across all sections) against Instructors") {
       return
