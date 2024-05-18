@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
 import ErrorPopUp from "@/components/ErrorPopUp"
-import MultitypeChart from '../charts/MultitypeChart';
+import MultitypeChart from '../charts/MultitypeChart'
+import { Spinner } from '@nextui-org/react'
 
 type MultitypeChartDataset = {
     label: string
@@ -196,7 +197,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                         </DropDown>
                     )}
                     </div>
-                    {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) && (
+                    {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 
                                 type="line"
@@ -209,6 +210,10 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                             />
                         </div>
                         
+                    ): (
+                        <div className='flex justify-center items-center'>
+                            <Spinner />
+                        </div>   
                     )}
                 </div>
             )}
