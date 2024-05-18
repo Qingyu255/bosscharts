@@ -44,6 +44,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
 
     // Manage state for filter by specified bidding window: to plot bid price against all regular terms for specified window
     const [chartDataInstructorsBiddingWindow, setChartDataInstructorsBiddingWindow] = useState<chartAttributes>()
+    const [windowsUpdated, setWindowsUpdated] = useState<boolean>(false)
 
     const fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
@@ -51,22 +52,26 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
             setBiddingWindowDropdownArr(biddingWindowDropdownOptions || [])
+            setWindowsUpdated(true)
         } catch (error: any) {
             // setError(error)
             // console.error(error)
             setBiddingWindowDropdownArr(["No historic bidding windows"])
+            setWindowsUpdated(true)
         }
     }
 
-    const handleInstructorSelect = (instructorSelected: string) => {
+    const handleInstructorSelect = async (instructorSelected: string) => {
         setCourseInstructorSelected(instructorSelected)
         // reset dropdown options
         setSelectedBiddingWindow("")
         setBiddingWindowDropdownArr([])
+        // as we need to fetch windows again
+        setWindowsUpdated(false)
         // hide charts until bidding window selected
         setHideDetailedCharts(true)
         // Now we fetch the windows in which this course has been bid for in the past
-        fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
+        await fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         // Make bidding window dropdown visible
         setIsBiddingWindowDropdownVisible(true)
     }
@@ -121,7 +126,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
             update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
             // show charts again
             setHideDetailedCharts(false)
-            scrollToDiv("VisualiseTrendAcrossSemesters")
+            // scrollToDiv("VisualiseTrendAcrossSemesters")
         } catch (error: any) {
             setError(error)
             console.error(error)
@@ -138,7 +143,12 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                     throw new Error(`${response.status}: ${errorResponse.detail}`)
                 }
                 const jsonPayload = await response.json()
-                setCourseInstructorsDropdownArr(jsonPayload.data)
+                const instructors = jsonPayload.data
+                setCourseInstructorsDropdownArr(instructors)
+
+                // since we want to pre-populate data on first page load
+                // set to first instructor in instructor array
+                await handleInstructorSelect(instructors[0]) 
             } catch (error: any) {
                 setError(error)
                 console.error(error)
@@ -148,14 +158,21 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     }, [])
 
     useEffect(() => {
-        if (chartDataInstructorsBiddingWindow) {
-            scrollToDiv("VisualiseTrendAcrossSemesters")
+        // to load chart on first page load
+        if (windowsUpdated && biddingWindowDropdownArr.length > 0) {
+            handleBiddingWindowSelect(biddingWindowDropdownArr[0])
         }
-    }, [chartDataInstructorsBiddingWindow])
+    }, [windowsUpdated, biddingWindowDropdownArr])
+
+    // useEffect(() => {
+    //     if (chartDataInstructorsBiddingWindow) {
+    //         scrollToDiv("VisualiseTrendAcrossSemesters")
+    //     }
+    // }, [chartDataInstructorsBiddingWindow])
 
     return (
         <>
-            <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Window</h1>
+            <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Specified Window</h1>
             {error ? (
                 <ErrorPopUp error={error}></ErrorPopUp>
             ) 

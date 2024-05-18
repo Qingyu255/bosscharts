@@ -44,6 +44,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
 
     // Manage state for filter by specified bidding window: to plot bid price against all regular terms for specified window
     const [chartDataAcrossBiddingWindow, setChartDataAcrossBiddingWindow] = useState<chartAttributes>()
+    const [termsUpdated, setTermsUpdated] = useState<boolean>(false)
 
     const fetchAvailableTermsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
@@ -51,22 +52,26 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
             setTermDropdownArr(biddingWindowDropdownOptions || [])
+            setTermsUpdated(true)
         } catch (error: any) {
             // setError(error)
             // console.error(error)
             setTermDropdownArr(["No historic Terms"])
+            setTermsUpdated(true)
         }
     }
 
-    const handleInstructorSelect = (instructorSelected: string) => {
+    const handleInstructorSelect = async (instructorSelected: string) => {
         setCourseInstructorSelected(instructorSelected)
         // reset dropdown options
         setTerm("")
         setTermDropdownArr([])
+        // as we need to fetch terms again
+        setTermsUpdated(false)
         // hide charts until bidding window selected
         setHideDetailedCharts(true)
         // Now we fetch the windows in which this course has been bid for in the past
-        fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
+        await fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         // Make bidding window dropdown visible
         setIsTermDropdownVisible(true)
     }
@@ -95,7 +100,6 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
-                console.log(updatedVacanciesInChartData)
                 setChartDataAcrossBiddingWindow(updatedVacanciesInChartData)
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
@@ -139,7 +143,12 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                 }
 
                 const jsonPayload = await response.json()
-                setCourseInstructorsDropdownArr(jsonPayload.data)
+                const instructors = jsonPayload.data
+                setCourseInstructorsDropdownArr(instructors)
+
+                // since we want to pre-populate data on first page load
+                // set to first instructor in instructor array
+                await handleInstructorSelect(instructors[0]) 
             } catch (error: any) {
                 setError(error)
                 console.error(error)
@@ -150,10 +159,17 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
     }, [])
 
     useEffect(() => {
-        if (chartDataAcrossBiddingWindow) {
-            scrollToDiv("VisualiseTrendAcrossBiddingWindows")
+        // to load chart on first page load
+        if (termsUpdated && termDropdownArr.length > 0) {
+            handleTermSelect(termDropdownArr[0])
         }
-    }, [chartDataAcrossBiddingWindow])
+    }, [termsUpdated, termDropdownArr])
+
+    // useEffect(() => {
+    //     if (chartDataAcrossBiddingWindow) {
+    //         scrollToDiv("VisualiseTrendAcrossBiddingWindows")
+    //     }
+    // }, [chartDataAcrossBiddingWindow])
 
     return (
         <>

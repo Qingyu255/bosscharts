@@ -10,6 +10,7 @@ export default function Footer() {
           width={30}
           height={30}
           alt="logo"
+          style={{width: "auto", height: "50px"}}
         />
         <p className='text-sm font-semibold'>BOSS CHARTS</p>
         <Image
@@ -17,6 +18,7 @@ export default function Footer() {
           width={30}
           height={30}
           alt="logo"
+          style={{width: "auto", height: "50px"}}
         />
       </footer>
     </>

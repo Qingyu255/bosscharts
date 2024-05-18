@@ -1,10 +1,16 @@
-import React from "react"
+"use client"
+import React, {useState} from "react"
 import Link from "next/link"
 import Image from 'next/image'
 import SearchBar from "./SearchBar"
 
 export default function Navbar() {
     const siteName = "BOSS CHARTS"
+    const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen)
+    }
     return (
         <>
             <div id="navbar" className="flex items-center justify-between border-b-2 md:px-3 md:py-2">
@@ -14,6 +20,7 @@ export default function Navbar() {
                             width={50}
                             height={50}
                             alt="logo"
+                            style={{width: "auto", height: "50px"}}
                         />
                         {siteName}
                     </Link>
@@ -23,9 +30,29 @@ export default function Navbar() {
                         <SearchBar />
                     </div>
                     <div className="flex items-center px-2 md:px-4 text-[11px] md:text-sm font-medium">
-                        <Link href="/">Burger</Link>
+                        <button onClick={toggleSidebar}>
+                            <Link href="/">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                </svg>
+                            </Link>
+                        </button>
                     </div>
                 </div>
+            </div>
+            <div className={`fixed top-0 right-0 w-64 bg-white h-full shadow-md transform ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform ease-in-out`}>
+                
+                <ul className="mt-8 ml-4 space-y-4 font-semibold">
+                    <li className="flex items-center">
+                        <button onClick={toggleSidebar}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li><Link href="/">Home</Link></li>
+                    <li><Link href="/about">About</Link></li>
+                </ul>
             </div>
         </>
     )
