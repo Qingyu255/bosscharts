@@ -1,47 +1,57 @@
 "use client"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import Link from "next/link"
-import Image from 'next/image'
+import Image from "next/image"
+import { usePathname } from "next/navigation"
 import SearchBar from "./SearchBar"
 
 export default function Navbar() {
     const siteName = "BOSS CHARTS"
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+    const [displaySearchBox, setDisplaySearchBox] = useState<boolean>(false)
+    const pathName = usePathname()
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen)
     }
+    useEffect(() => {
+        const checkPathIsNotRoot = () => {
+            setDisplaySearchBox(pathName !== "/")
+        }
+        checkPathIsNotRoot()
+    }, [pathName])
     return (
         <>
             <div id="navbar" className="flex items-center justify-between border-b-2 md:px-3 md:py-2">
-                    <Link href='/' className="flex items-center text-sm md:text-xl font-bold px-3 md:px-4 py-2 gap-x-2 md:gap-x-4">
-                        <Image
-                            src="/logo.png"
-                            width={50}
-                            height={50}
-                            alt="logo"
-                            style={{width: "auto", height: "50px"}}
-                        />
-                        {siteName}
-                    </Link>
+                <Link href='/' className="flex items-center text-sm md:text-xl font-bold px-3 md:px-4 py-2 gap-x-2 md:gap-x-4">
+                    <Image
+                        src="/logo.png"
+                        width={50}
+                        height={50}
+                        alt="logo"
+                        style={{width: "auto", height: "50px"}}
+                    />
+                    {siteName}
+                </Link>
                 
                 <div className="flex flex-row text-md">
-                    <div className="flex justify-center">
-                        <SearchBar />
-                    </div>
+                    {displaySearchBox ? (
+                        <div className="flex justify-center">
+                            <SearchBar />
+                        </div>
+                    ) : (
+                        <div className="bg-white w-[30px] z-20"> </div>
+                    )}
                     <div className="flex items-center px-2 md:px-4 text-[11px] md:text-sm font-medium">
                         <button onClick={toggleSidebar}>
-                            <Link href="/">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                                </svg>
-                            </Link>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
                         </button>
                     </div>
                 </div>
             </div>
-            <div className={`fixed top-0 right-0 w-64 bg-white h-full shadow-md transform ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform ease-in-out`}>
-                
+            <div className={`z-30 fixed top-0 right-0 w-64 bg-white h-full shadow-md transform ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform ease-in-out`}>
                 <ul className="mt-8 ml-4 space-y-4 font-semibold">
                     <li className="flex items-center">
                         <button onClick={toggleSidebar}>

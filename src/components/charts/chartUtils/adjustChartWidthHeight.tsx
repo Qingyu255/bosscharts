@@ -10,7 +10,7 @@ const adjustChartWidthHeight = () => {
         [768, ["550px", "500px"]],
         [640, ["550px", "425px"]],
         [520, ["500px", "400px"]]
-    ]);
+    ])
 
     // set viewport
     let height_px = "";

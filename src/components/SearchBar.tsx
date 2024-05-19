@@ -14,7 +14,6 @@ export default function SearchBar({ search }: { search?: string }) {
     const [query] = useDebounce(text, 750)
     const [uniqueCourses, setUniqueCourses] = useState<string[]>([])
     const [searchSuggestions, setSearchSuggestions] = useState<string[]>([])
-    const [searched, setSearched] = useState<boolean>(false)
 
     useEffect(() => {
         const fetchAllCourseCodes = async() => {
@@ -55,7 +54,15 @@ export default function SearchBar({ search }: { search?: string }) {
         router.push(`/course/${courseCode}`)
         setText(courseCode)
         setSearchSuggestions([])
-    };
+    }
+
+    const handleKeyPressDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            router.push(`/course/${text}`)
+            setSearchSuggestions([])
+            setText(text.toUpperCase())
+        }
+    }
 
     return (
         <>
@@ -65,15 +72,16 @@ export default function SearchBar({ search }: { search?: string }) {
                     placeholder='Search Course Code/Course Name'
                     // Maybe can add functionality to search professor too
                     onChange={e => setText(e.target.value)}
-                    className='block w-full rounded-md border-0 px-2 py-1.5 md:px-3 md:py-2 text-[12px] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-sky-600 sm:text-sm '
+                    onKeyDown={handleKeyPressDown}
+                    className='w-full rounded-md border-0 px-2 py-1.5 md:px-3 md:py-2 text-[12px] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-sky-700 sm:text-sm '
                 />
-                <div className='pointer-events-none absolute right-[60px] md:right-[105px] top-[25px] md:top-[33px] flex items-center'>
+                <div className='pointer-events-none absolute right-[60px] md:right-[95px] top-[23px] md:top-[31px] flex items-center translate-x-full'>
                     <MagnifyingGlassIcon
                         className='h-5 w-5 text-gray-400'
                         aria-hidden='true'
                     />
                 </div>
-                {searchSuggestions.length > 0 && !searched && (
+                {searchSuggestions.length > 0 && (
                     <ul className='absolute z-10 w-fit bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto'>
                         {searchSuggestions.map((searchSuggestion, index) => (
                             <li
