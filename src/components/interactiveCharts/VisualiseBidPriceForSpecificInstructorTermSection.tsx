@@ -83,6 +83,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         setHideDetailedCharts(true)
         // Now we fetch the windows in which this course has been bid for in the past
         fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
+        setIsSectionDropdownVisible(false)
         // Make bidding window dropdown visible
         setIsTermDropdownVisible(true)
     }
