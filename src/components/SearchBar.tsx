@@ -73,9 +73,9 @@ export default function SearchBar({ search }: { search?: string }) {
                     // Maybe can add functionality to search professor too
                     onChange={e => setText(e.target.value)}
                     onKeyDown={handleKeyPressDown}
-                    className='w-full rounded-md border-0 px-2 py-1.5 md:px-3 md:py-2 text-[12px] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-sky-700 sm:text-sm '
+                    className='w-full rounded-md border-0 px-2 py-1.5 md:px-3 md:py-2 text-[10px] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-sky-700 sm:text-sm '
                 />
-                <div className='pointer-events-none absolute right-[60px] md:right-[95px] top-[23px] md:top-[31px] flex items-center translate-x-full'>
+                <div className='pointer-events-none absolute right-[65px] sm:right-[170px] md:right-[180px] top-[23px] md:top-[31px] flex items-center translate-x-full'>
                     <MagnifyingGlassIcon
                         className='h-5 w-5 text-gray-400'
                         aria-hidden='true'

@@ -6,6 +6,7 @@ import BarChart from '@/components/charts/BarChart'
 import adjustChartWidthHeight from '@/components/charts/chartUtils/adjustChartWidthHeight'
 import VisualiseTrendAcrossSemesters from '@/components/interactiveCharts/VisualiseTrendAcrossSemesters'
 import VisualiseTrendAcrossBiddingWindows from '@/components/interactiveCharts/VisualiseTrendAcrossBiddingWindows'
+import VisualiseBidPriceForSpecificInstructorTermSection from '@/components/interactiveCharts/VisualiseBidPriceForSpecificInstructorTermSection'
 import { Spinner } from '@nextui-org/react'
 
 type Dataset = {
@@ -158,6 +159,12 @@ export default function page({ params } : {params: {courseCode: string}}) {
                                 width={chartWidthHeightArr[0]}  
                                 height={chartWidthHeightArr[1]}>
                             </VisualiseTrendAcrossBiddingWindows>
+
+                            <VisualiseBidPriceForSpecificInstructorTermSection
+                                courseCode={courseCode} 
+                                width={chartWidthHeightArr[0]}  
+                                height={chartWidthHeightArr[1]}>
+                            </VisualiseBidPriceForSpecificInstructorTermSection>
                         </div>
                     </div>
                 </>

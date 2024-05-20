@@ -7,6 +7,7 @@ type DropdownProps = {
     onSelect: (option: string) => void,
     category: string,
     options : string[] | undefined
+    showFirstOption?: boolean // optional
 }
 
 export default function DropDown( props : DropdownProps ) {
@@ -21,7 +22,7 @@ export default function DropDown( props : DropdownProps ) {
 
     // Update ref whenever selectedOption changes
     useEffect(() => {
-        if (options.length > 0) {
+        if (options.length > 0 && props.showFirstOption !== false) {
             // if options not empty, set selected to first option in options array
             setSelectedOption(`${category}: ${options[0]}`)
         }

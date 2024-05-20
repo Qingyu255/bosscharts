@@ -86,7 +86,7 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
           color: 'rgb(0, 0, 0)',  // Color to match the line
         },
         ticks: {
-          color: 'rgba(75, 192, 192, 1)',  // Color to match the line
+          color: 'rgb(0, 0, 0)',  // Color to match the line
         }
       },
       y1: {

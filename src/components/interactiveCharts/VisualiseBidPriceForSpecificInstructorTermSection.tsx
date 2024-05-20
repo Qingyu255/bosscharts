@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import DropDown from '@/components/DropDown'
 import ErrorPopUp from "@/components/ErrorPopUp"
-import MultitypeChart from '../charts/MultitypeChart'
-import { Spinner } from "@nextui-org/spinner"
+import MultitypeChart from '../charts/MultitypeChart';
 
 type MultitypeChartDataset = {
     label: string
@@ -12,7 +11,7 @@ type MultitypeChartDataset = {
     fill: boolean
     yAxisID: string
 }
-  
+
 type ChartData = {
     responsive: boolean
     labels: string[]
@@ -27,8 +26,8 @@ type chartAttributes = {
     height: string
   }
 
-export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
-    
+export default function VisualiseBidPriceForSpecificInstructorTermSection({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
+
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
@@ -36,51 +35,75 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
     const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>("")
 
-    const [biddingWindowDropdownArr, setBiddingWindowDropdownArr] = useState<string[]>([])
-    const [isBiddingWindowDropdownVisible, setIsBiddingWindowDropdownVisible] = useState<boolean>(false)
-    const [selectedBiddingWindow, setSelectedBiddingWindow] = useState<string>("")
+    const [termDropdownArr, setTermDropdownArr] = useState<string[]>([])
+    const [isTermDropdownVisible, setIsTermDropdownVisible] = useState<boolean>(false)
+    const [selectedTerm, setTerm] = useState<string>("")
+    const [selectedSection, setSection] = useState<string>("")
+
+    const [sectionDropdownArr, setSectionDropdownArr] = useState<string[]>([])
+    const [isSectionDropdownVisible, setIsSectionDropdownVisible] = useState<boolean>(false)
 
     const [hideDetailedCharts, setHideDetailedCharts] = useState<boolean>(false)
 
     // Manage state for filter by specified bidding window: to plot bid price against all regular terms for specified window
-    const [chartDataInstructorsBiddingWindow, setChartDataInstructorsBiddingWindow] = useState<chartAttributes>()
-    const [windowsUpdated, setWindowsUpdated] = useState<boolean>(false)
+    const [chartDataAcrossBiddingWindow, setChartDataAcrossBiddingWindow] = useState<chartAttributes>()
 
-    const fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
+    const fetchAvailableTermsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
-            const response = await fetch(`${apiURL}/instructordata/bidding_windows_available/${courseCode}/${instructorName}`)
+            const response = await fetch(`${apiURL}/instructordata/terms_available/${courseCode}/${instructorName}`)
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
-            setBiddingWindowDropdownArr(biddingWindowDropdownOptions || [])
-            setWindowsUpdated(true)
+            setTermDropdownArr(biddingWindowDropdownOptions || [])
         } catch (error: any) {
             // setError(error)
             // console.error(error)
-            setBiddingWindowDropdownArr(["No historic bidding windows"])
-            setWindowsUpdated(true)
+            setTermDropdownArr(["No historic Terms"])
         }
     }
 
-    const handleInstructorSelect = async (instructorSelected: string) => {
+    const fetchAvailableSections = async (term: string) => {
+        try {
+            const response = await fetch(`${apiURL}/instructordata/sections_available/${courseCode}/${courseInstructorSelected}/${term}`)
+            const jsonPayload = await response.json()
+            setSectionDropdownArr(jsonPayload.data|| [])
+            setIsSectionDropdownVisible(true)
+        } catch (error: any) {
+            // setError(error)
+            // console.error(error)
+            setSectionDropdownArr(["Error: No historic Sections Found"])
+        }
+    }
+
+    const handleInstructorSelect = (instructorSelected: string) => {
         setCourseInstructorSelected(instructorSelected)
         // reset dropdown options
-        setSelectedBiddingWindow("")
-        setBiddingWindowDropdownArr([])
-        // as we need to fetch windows again
-        setWindowsUpdated(false)
+        // setTerm("")
+        setTermDropdownArr([])
         // hide charts until bidding window selected
         setHideDetailedCharts(true)
         // Now we fetch the windows in which this course has been bid for in the past
-        await fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
+        fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         // Make bidding window dropdown visible
-        setIsBiddingWindowDropdownVisible(true)
+        setIsTermDropdownVisible(true)
     }
-    const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
+
+    const handleTermSelect = async (term: string) => {
+        setTerm(term)
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
-            if (!response.ok) {
-                throw new Error(`${response.status}`)
-            }
+            setSectionDropdownArr([])
+            fetchAvailableSections(term)
+        } catch (error: any) {
+            setError(error)
+            console.error(error)
+        }
+    }
+
+    const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, section: string) => {
+        try {
+            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/vacancies/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`)
+            // if (!response.ok) {
+            //     throw new Error(`${response.status}`)
+            // }
             const jsonPayload = await response.json()
             const vacanciesDatasets = jsonPayload.data
 
@@ -100,7 +123,8 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
-                setChartDataInstructorsBiddingWindow(updatedVacanciesInChartData)
+                console.log(updatedVacanciesInChartData)
+                setChartDataAcrossBiddingWindow(updatedVacanciesInChartData)
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
             }
@@ -110,23 +134,22 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         }
     }
 
-    // const scrollToDiv = (id: string) => {
-    //     const element = document.getElementById(id)
-    //     if (element) {
-    //         element.scrollIntoView({ behavior: 'smooth' })
-    //     }
-    // }
+    const scrollToDiv = (id: string) => {
+        const element = document.getElementById(id)
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+        }
+    }
 
     // Note that we can only handle winding window after courseInstructorSelected is set
-    const handleBiddingWindowSelect = async (biddingWindow: string) => {
-        setSelectedBiddingWindow(biddingWindow)
+    const handleSectionSelect = async (section: string) => {
+        setSection(section)
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`)
             const jsonPayload = await response.json()
-            update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
+            update_before_after_vacancy_data(jsonPayload, section) // state change is made in this update function
             // show charts again
             setHideDetailedCharts(false)
-            // scrollToDiv("VisualiseTrendAcrossSemesters")
         } catch (error: any) {
             setError(error)
             console.error(error)
@@ -135,44 +158,34 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
 
     useEffect(() => {
         // Fetch dropdown options array for select instructor on page refresh
-        const fetch_instructors_who_teach_course_code = async () => {
+        const fetchInstructorsWhoTeachCourseCode = async () => {
             try {
                 const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
                 if (!response.ok) {
                     const errorResponse = await response.json()
                     throw new Error(`${response.status}: ${errorResponse.detail}`)
                 }
-                const jsonPayload = await response.json()
-                const instructors = jsonPayload.data
-                setCourseInstructorsDropdownArr(instructors)
 
-                // since we want to pre-populate data on first page load
-                // set to first instructor in instructor array
-                await handleInstructorSelect(instructors[0]) 
+                const jsonPayload = await response.json()
+                setCourseInstructorsDropdownArr(jsonPayload.data)
             } catch (error: any) {
                 setError(error)
                 console.error(error)
             }
         }
-        fetch_instructors_who_teach_course_code()
+
+        fetchInstructorsWhoTeachCourseCode()
     }, [])
 
     useEffect(() => {
-        // to load chart on first page load
-        if (windowsUpdated && biddingWindowDropdownArr.length > 0) {
-            handleBiddingWindowSelect(biddingWindowDropdownArr[0])
+        if (chartDataAcrossBiddingWindow) {
+            scrollToDiv("VisualiseBidPriceForSpecificInstructorTermSection")
         }
-    }, [windowsUpdated, biddingWindowDropdownArr])
-
-    // useEffect(() => {
-    //     if (chartDataInstructorsBiddingWindow) {
-    //         scrollToDiv("VisualiseTrendAcrossSemesters")
-    //     }
-    // }, [chartDataInstructorsBiddingWindow])
+    }, [chartDataAcrossBiddingWindow])
 
     return (
         <>
-            <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Specified Window</h1>
+            <h1 id="VisualiseBidPriceForSpecificInstructorTermSection" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Across Bidding Windows For Specified Term and Section</h1>
             {error ? (
                 <ErrorPopUp error={error}></ErrorPopUp>
             ) 
@@ -183,40 +196,44 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
+                            showFirstOption={false}
                         >
                         </DropDown>
-                    
-                    {(isBiddingWindowDropdownVisible && biddingWindowDropdownArr.length > 0) && (
+
+                    {(isTermDropdownVisible && termDropdownArr.length > 0) && (
                         <DropDown 
-                            category='Bidding Window'
-                            onSelect={handleBiddingWindowSelect}
-                            options={biddingWindowDropdownArr}
+                            category='Term'
+                            onSelect={handleTermSelect}
+                            options={termDropdownArr}
+                            showFirstOption={false}
+                        >
+                        </DropDown>
+                    )}
+                    {(isSectionDropdownVisible && sectionDropdownArr.length > 0) && (
+                        <DropDown 
+                            category='Section'
+                            onSelect={handleSectionSelect}
+                            options={sectionDropdownArr}
+                            showFirstOption={false}
                         >
                         </DropDown>
                     )}
                     </div>
-                    {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) ? (
+                    {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) && (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 
                                 type="line"
-                                title={chartDataInstructorsBiddingWindow.title}
-                                chartData={chartDataInstructorsBiddingWindow.chartData} 
+                                title={chartDataAcrossBiddingWindow.title}
+                                chartData={chartDataAcrossBiddingWindow.chartData} 
                                 width={width}
                                 height={height}
                                 key={`${width}-${height}`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
                                 // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
                             />
                         </div>
-                        
-                    ): (
-                        <div className='flex justify-center items-center'>
-                            <Spinner />
-                        </div>   
                     )}
                 </div>
             )}
         </>
     )
 }
-
-

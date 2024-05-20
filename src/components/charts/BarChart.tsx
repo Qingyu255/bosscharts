@@ -93,7 +93,17 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
         text: title,
       },
     },
-
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            // size: 7
+          },
+          maxRotation: 60,
+        }
+      }
+    },
+    
     onClick: handleClick
   }
 

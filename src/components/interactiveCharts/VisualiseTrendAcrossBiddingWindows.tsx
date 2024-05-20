@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import LineChart from '@/components/charts/LineChart'
 import DropDown from '@/components/DropDown'
 import ErrorPopUp from "@/components/ErrorPopUp"
 import MultitypeChart from '../charts/MultitypeChart'
@@ -111,12 +110,12 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         }
     }
 
-    const scrollToDiv = (id: string) => {
-        const element = document.getElementById(id)
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
-        }
-    }
+    // const scrollToDiv = (id: string) => {
+    //     const element = document.getElementById(id)
+    //     if (element) {
+    //         element.scrollIntoView({ behavior: 'smooth' })
+    //     }
+    // }
 
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleTermSelect = async (term: string) => {
