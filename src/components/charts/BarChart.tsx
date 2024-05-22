@@ -44,10 +44,6 @@ type chartAttributes = {
 }
 
 export default function BarChart({ title, chartData, width, height }: chartAttributes) {
-  if (!chartData) {
-    // return if chartData is null. For example when course code not found
-    return null
-  }
 
   const [isClickTimerRunning, setIsClickTimerRunning] = useState<boolean>(false) 
   const [clickCount, setClickCount] = useState<number>(0)

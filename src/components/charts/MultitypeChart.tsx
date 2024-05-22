@@ -54,10 +54,6 @@ type chartAttributes = {
 }
 
 export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
-  if (!chartData) {
-    // return if chartData is null. For example when course code not found
-    return null
-  }
 
   const options = {
     maintainAspectRatio: false,

@@ -220,7 +220,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                         </DropDown>
                     )}
                     </div>
-                    {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) && (
+                    {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 
                                 type="line"
@@ -231,6 +231,10 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                                 key={`${width}-${height}`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
                                 // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
                             />
+                        </div>
+                    ) : (
+                        <div className='flex justify-center items-center w-full border-2 rounded-xl h-36 text-gray-400 text-xs md:text-md'>
+                            Select Fields to View Chart!
                         </div>
                     )}
                 </div>

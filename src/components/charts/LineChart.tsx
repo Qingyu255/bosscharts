@@ -44,10 +44,6 @@ type chartAttributes = {
 }
 
 export default function LineChart( {title, chartData, width, height} : chartAttributes ) {
-  if (!chartData) {
-    // return if chartData is null. For example when course code not found
-    return null
-  }
 
   const options = {
     plugins: {
