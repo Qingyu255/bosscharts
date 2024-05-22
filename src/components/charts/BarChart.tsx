@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef } from 'react'
+import React, { useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -49,8 +49,8 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
     return null
   }
 
-  const clickTimeout = useRef<NodeJS.Timeout | null>(null)
-  const clickCount = useRef<number>(0)
+  const [isClickTimerRunning, setIsClickTimerRunning] = useState<boolean>(false) 
+  const [clickCount, setClickCount] = useState<number>(0)
 
   const handleClick = (event: any, elements: any) => {
     if (elements.length === 0) {
@@ -62,17 +62,21 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
       return
       // as we only want double click functionality for the above title
     }
-    clickCount.current += 1
+    // update click like this temporarily as using setClickCount(clickCount + 1) wont work -> state change will only register after the function is completely ran
+    const currentClickCount = clickCount + 1
 
-    if (clickCount.current === 1) {
-      clickTimeout.current = setTimeout(() => {
-        clickCount.current = 0
+    if (currentClickCount === 1) {
+      // here if first click made
+      setIsClickTimerRunning(true)
+      setTimeout(() => {
+        setClickCount(0)
       }, 300) // 300ms timeout for detecting double-click
+      setClickCount(currentClickCount)
     } else {
-      if (clickTimeout.current) {
-        clearTimeout(clickTimeout.current);
-        clickCount.current = 0
-
+      if (isClickTimerRunning === true) {
+        // meaning our currentClickCount is 1 and the second click is made within 300ms
+        setClickCount(0)
+        setIsClickTimerRunning(false)
         if (elements.length > 0) {
           const instructor_name = chart.data.labels[elements[0].index] as string;
           const link = "https://www.afterclass.io/professor/smu-" + instructor_name.split(" ").join("-").toLowerCase()

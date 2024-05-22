@@ -1,7 +1,6 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import ErrorPopUp from '@/components/ErrorPopUp'
-import LineChart from '@/components/charts/LineChart'
 import BarChart from '@/components/charts/BarChart'
 import adjustChartWidthHeight from '@/components/charts/chartUtils/adjustChartWidthHeight'
 import VisualiseTrendAcrossSemesters from '@/components/interactiveCharts/VisualiseTrendAcrossSemesters'
@@ -146,7 +145,7 @@ export default function Page({ params } : {params: {courseCode: string}}) {
                                     height={chartWidthHeightArr[1]}
                                     key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-2`} // to force re-render
                                 />
-                                <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor's Afterclass reviews (if it exists)</p>
+                                <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor&apos;s Afterclass reviews (if it exists)</p>
                             </div>
                             <div>
                                 <VisualiseTrendAcrossSemesters 

@@ -14,7 +14,7 @@ import {
   BarController,
   ChartOptions
 } from "chart.js"
-import { Chart, ChartProps }  from 'react-chartjs-2'
+import { Chart }  from 'react-chartjs-2'
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
