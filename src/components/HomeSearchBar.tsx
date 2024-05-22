@@ -97,8 +97,7 @@ export default function HomeSearchBar({ search }: { search?: string }) {
                                         key={index}
                                         text={courseSearchSuggestion}
                                         category='course'
-                                    >
-                                    </SearchSuggestionCard>
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -110,8 +109,7 @@ export default function HomeSearchBar({ search }: { search?: string }) {
                                         key={index}
                                         text={professorSearchSuggestion}
                                         category='professor'
-                                    >
-                                    </SearchSuggestionCard>
+                                    />
                                 ))}
                             </div>
                         </div>

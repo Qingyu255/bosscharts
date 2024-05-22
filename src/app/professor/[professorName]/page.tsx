@@ -36,8 +36,7 @@ export default function Page({ params } : { params: {professorName: string} }) {
                   key={index}
                   text={course}
                   category='course'
-                >
-                </SearchSuggestionCard>
+                />
               ))}
             </div>
           </div>
