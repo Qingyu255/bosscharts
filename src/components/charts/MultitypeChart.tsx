@@ -70,6 +70,13 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
       }
     },
     scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 10
+          }
+        }
+      },
       y: {
         type: 'linear' as const,
         display: true,
