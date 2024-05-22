@@ -3,13 +3,13 @@ const adjustChartWidthHeight = () => {
     const minWindowWidthToChartWidthHeightMap = new Map([
         // similar to tailwindCSS breakpoints
         // initialise in reverse order
-        [1540, ["645px", "545px"]], // this is added specially to force rerender of the overview charts when view port > 1536 = 4
-        [1536, ["650px", "550px"]],
-        [1280, ["650px", "550px"]],
-        [1024, ["550px", "550px"]],
-        [768, ["550px", "500px"]],
-        [640, ["550px", "425px"]],
-        [520, ["500px", "400px"]]
+        [1540, ["645px", "645px"]], // this is added specially to force rerender of the overview charts when view port > 1536 = 4
+        [1536, ["650px", "650px"]],
+        [1280, ["650px", "650px"]],
+        [1024, ["550px", "650px"]],
+        [768, ["550px", "600px"]],
+        [640, ["550px", "525px"]],
+        [520, ["500px", "510px"]]
     ])
 
     // set viewport

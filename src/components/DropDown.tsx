@@ -32,22 +32,22 @@ export default function DropDown( props : DropdownProps ) {
         selectedOptionRef.current = selectedOption
     }, [selectedOption])
 
-    useEffect(() => {
-        const handleResize = () => {
-            // this strips the `${category}: ` from the selected option displayed is viewport becomes too small
-            if (selectedOptionRef.current.split(`${category}: `).length > 1 && selectedOptionRef.current !== `Select ${category}` && window.innerWidth < 500) {
-                const string_without_select_word = selectedOptionRef.current.split(`${category}: `)[1]
-                setSelectedOption(string_without_select_word)
-            }
-        }
-        window.addEventListener("resize", handleResize)
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         // this strips the `${category}: ` from the selected option displayed is viewport becomes too small
+    //         if (selectedOptionRef.current.split(`${category}: `).length > 1 && selectedOptionRef.current !== `Select ${category}` && window.innerWidth < 500) {
+    //             const string_without_select_word = selectedOptionRef.current.split(`${category}: `)[1]
+    //             setSelectedOption(string_without_select_word)
+    //         }
+    //     }
+    //     window.addEventListener("resize", handleResize)
     
-        handleResize()
+    //     handleResize()
 
-        return () => {
-            window.removeEventListener("resize", handleResize)
-        }
-    }, [selectedOption])
+    //     return () => {
+    //         window.removeEventListener("resize", handleResize)
+    //     }
+    // }, [selectedOption])
 
     function selectionHandler(option: string) {
         props.onSelect(option)
@@ -55,22 +55,32 @@ export default function DropDown( props : DropdownProps ) {
     }    
 
     return (
-        <Dropdown>
+        <Dropdown shouldBlockScroll={false}>
             <DropdownTrigger>
-                <Button variant="bordered" className="text-[11px] sm:text-sm">
+                <Button variant="bordered" className="text-[10px] sm:text-sm" style={{
+                    whiteSpace: 'normal',
+                    overflowWrap: 'break-word',
+                    wordBreak: 'break-word'
+                }}>
                     {selectedOption}
                 </Button>
             </DropdownTrigger>
+            <div className="max-h-60 overflow-y-auto">
             <DropdownMenu aria-label="Static Actions">
                 {options.map((option, index) => (
                     <DropdownItem key={index + 1}>
                         {/* block: Full Width: Block-level elements expand to occupy the full width of their containing block. This means that they stretch from the left edge to the right edge of their parent container. */}
-                        <div onClick={() => selectionHandler(option)} className="block">
+                        <div onClick={() => selectionHandler(option)} className="block" style={{
+                                whiteSpace: 'normal',
+                                overflowWrap: 'break-word',
+                                wordBreak: 'break-word'
+                            }}>
                             {(options[0] !== `No ${category} Found`)? option.toUpperCase() : option}
                         </div>
                     </DropdownItem>
                 ))}
             </DropdownMenu>
+            </div>
         </Dropdown>
     )
 }

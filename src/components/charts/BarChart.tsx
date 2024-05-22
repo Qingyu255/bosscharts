@@ -95,6 +95,15 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
     },
     scales: {
       x: {
+        beforeUpdate(axis: any) {
+          const labels = axis.chart.data.labels
+          for (let i = 0; i < labels.length; i++) {
+            const label = labels[i]
+            if (typeof label === 'string' && label.length > 18) {
+              labels[i] = label.substring(0, 18) + "..."
+            }
+          }  
+        },
         ticks: {
           font: {
             // size: 7
