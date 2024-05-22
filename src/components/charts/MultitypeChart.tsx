@@ -15,6 +15,7 @@ import {
   ChartOptions
 } from "chart.js"
 import { Chart }  from 'react-chartjs-2'
+import { ChartType } from 'chart.js'
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
@@ -54,17 +55,14 @@ type chartAttributes = {
 }
 
 export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
-
+  const chartType: ChartType = "line" 
   const options = {
     maintainAspectRatio: false,
     tooltips: {
       enabled: true,
-      mode: 'label',
+      mode: 'label' as const,
     },
     plugins: {
-      legend: {
-        position: 'top',
-      },
       stacked: false,
       title: {
         display: true,
@@ -73,9 +71,9 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
     },
     scales: {
       y: {
-        type: 'linear',
+        type: 'linear' as const,
         display: true,
-        position: 'left',
+        position: 'left' as const,
         title: {
           display: true,
           text: "Median 'Median Bid' Price",
@@ -86,9 +84,9 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
         }
       },
       y1: {
-        type: 'linear',
+        type: 'linear' as const,
         display: true,
-        position: 'right',
+        position: 'right' as const,
         grid: {
           drawOnChartArea: false,
         },
@@ -106,7 +104,7 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
 
   return (
     <div className='flex flex-col justify-center items-center max-h-[750px]'>
-      <Chart type={type} data={chartData} options={options} width={width} height={height}/>
+      <Chart type={chartType} data={chartData} options={options} width={width} height={height}/>
     </div>
   )
 }
