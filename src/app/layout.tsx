@@ -4,12 +4,13 @@ import { Inter } from 'next/font/google'
 import { Providers } from './providers'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'BOSS Charts',
-  description: 'SMU BOSS Bid Price Analytics',
+  title: 'SMU BOSS Charts',
+  description: 'SMU Boss Bidding Charts - Visualise Bid Price History and Analyse Detailed Bid Price Trends For Any Course',
   icons: {
     icon: "/logo.png"
   }
@@ -21,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en'> 
+    <html lang='en'>
       <body className={inter.className}>
         <Providers>
           <Navbar />

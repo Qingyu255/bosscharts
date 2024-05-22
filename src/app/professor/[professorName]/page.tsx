@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ErrorPopUp from '@/components/ErrorPopUp'
 import SearchSuggestionCard from '@/components/cards/SearchSuggestionCard'
 
-export default function page({ params } : { params: {professorName: string} }) {
+export default function Page({ params } : { params: {professorName: string} }) {
     const professorName = decodeURIComponent(params.professorName)
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
     const [coursesTaught, setCoursesTaught] = useState<string[]>([])

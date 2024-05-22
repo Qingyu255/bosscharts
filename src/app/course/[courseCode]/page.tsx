@@ -30,7 +30,7 @@ type chartAttributes = {
     height: string
   }
 
-export default function page({ params } : {params: {courseCode: string}}) {
+export default function Page({ params } : {params: {courseCode: string}}) {
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
     const courseCode: string = params.courseCode.toUpperCase()
     const [courseName, setCourseName] = useState<string>("")
@@ -116,63 +116,65 @@ export default function page({ params } : {params: {courseCode: string}}) {
     }
 
     return (
-        <div className='flex flex-col px-5 md:px-20 lg:px-32 xl:px-40 2xl:px-96'>
-            <p className='px-4 md:px-8 py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>COURSE CODE: {courseCode} ({courseName})</p>
-            {error ? (
-                <ErrorPopUp error={error}></ErrorPopUp>
-            ) 
-            : (chartDataOverview && chartDataInstructorOverview ? (
-                <>
-                    {isSCISCourse && (
-                        <button onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left mx-4 md:mx-8 p-1 px-1.5 border-2 w-fit rounded-xl hover:bg-gray-200 text-xs sm:text-sm'>
-                            View Course Information
-                        </button>
-                    )}
-                    <div className='flex flex-col gap-y-5'>
-                        <BarChart 
-                            title={chartDataOverview.title} 
-                            chartData={chartDataOverview.chartData} 
-                            width={chartWidthHeightArr[0]} 
-                            height={chartWidthHeightArr[1]}
-                            key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-1`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
-                            // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
-                        />
-                        <div className=' flex flex-col'>
-                            <BarChart
-                                title={chartDataInstructorOverview.title} 
-                                chartData={chartDataInstructorOverview.chartData} 
+        <>
+            <div className='flex flex-col px-5 md:px-20 lg:px-32 xl:px-40 2xl:px-96'>
+                <p className='px-4 md:px-8 py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>COURSE CODE: {courseCode} ({courseName})</p>
+                {error ? (
+                    <ErrorPopUp error={error}></ErrorPopUp>
+                ) 
+                : (chartDataOverview && chartDataInstructorOverview ? (
+                    <>
+                        {isSCISCourse && (
+                            <button onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left mx-4 md:mx-8 p-1 px-1.5 border-2 w-fit rounded-xl hover:bg-gray-200 text-xs sm:text-sm'>
+                                View Course Information
+                            </button>
+                        )}
+                        <div className='flex flex-col gap-y-5'>
+                            <BarChart 
+                                title={chartDataOverview.title} 
+                                chartData={chartDataOverview.chartData} 
                                 width={chartWidthHeightArr[0]} 
                                 height={chartWidthHeightArr[1]}
-                                key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-2`} // to force re-render
+                                key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-1`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
+                                // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
                             />
-                            <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor's Afterclass reviews (if it exists)</p>
-                        </div>
-                        <div>
-                            <VisualiseTrendAcrossSemesters 
-                                courseCode={courseCode} 
-                                width={chartWidthHeightArr[0]}  
-                                height={chartWidthHeightArr[1]}>
-                            </VisualiseTrendAcrossSemesters>
+                            <div className=' flex flex-col'>
+                                <BarChart
+                                    title={chartDataInstructorOverview.title} 
+                                    chartData={chartDataInstructorOverview.chartData} 
+                                    width={chartWidthHeightArr[0]} 
+                                    height={chartWidthHeightArr[1]}
+                                    key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-2`} // to force re-render
+                                />
+                                <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor's Afterclass reviews (if it exists)</p>
+                            </div>
+                            <div>
+                                <VisualiseTrendAcrossSemesters 
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}>
+                                </VisualiseTrendAcrossSemesters>
 
-                            <VisualiseTrendAcrossBiddingWindows
-                                courseCode={courseCode} 
-                                width={chartWidthHeightArr[0]}  
-                                height={chartWidthHeightArr[1]}>
-                            </VisualiseTrendAcrossBiddingWindows>
+                                <VisualiseTrendAcrossBiddingWindows
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}>
+                                </VisualiseTrendAcrossBiddingWindows>
 
-                            <VisualiseBidPriceForSpecificInstructorTermSection
-                                courseCode={courseCode} 
-                                width={chartWidthHeightArr[0]}  
-                                height={chartWidthHeightArr[1]}>
-                            </VisualiseBidPriceForSpecificInstructorTermSection>
+                                <VisualiseBidPriceForSpecificInstructorTermSection
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}>
+                                </VisualiseBidPriceForSpecificInstructorTermSection>
+                            </div>
                         </div>
-                    </div>
-                </>
-            ) : (
-                <div className='flex justify-center items-center pb-8'>
-                    <Spinner />
-                </div>   
-            ))}
-        </div>
+                    </>
+                ) : (
+                    <div className='flex justify-center items-center pb-8'>
+                        <Spinner />
+                    </div>   
+                ))}
+            </div>
+        </>
     )
 }
