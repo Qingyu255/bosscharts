@@ -68,9 +68,9 @@ export default function DropDown( props : DropdownProps ) {
             <div className="max-h-60 overflow-y-auto">
             <DropdownMenu aria-label="Static Actions">
                 {options.map((option, index) => (
-                    <DropdownItem key={index + 1}>
+                    <DropdownItem key={index + 1} className="p-0">
                         {/* block: Full Width: Block-level elements expand to occupy the full width of their containing block. This means that they stretch from the left edge to the right edge of their parent container. */}
-                        <div onClick={() => selectionHandler(option)} className="block" style={{
+                        <div onClick={() => selectionHandler(option)} className="block h-full w-full p-1" style={{
                                 whiteSpace: 'normal',
                                 overflowWrap: 'break-word',
                                 wordBreak: 'break-word'
