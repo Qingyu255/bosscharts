@@ -26,7 +26,7 @@ export default function DropDown( props : DropdownProps ) {
             // if options not empty, set selected to first option in options array
             setSelectedOption(`${category}: ${options[0]}`)
         }
-    }, [options])
+    }, [options, category])
 
     useEffect(() => {
         selectedOptionRef.current = selectedOption

@@ -29,7 +29,7 @@ export default function HomeSearchBar({ search }: { search?: string }) {
         }
         fetchAllCourseCodes()
         fetchAllProfessors()
-    }, [])
+    }, [apiURL])
 
     const search_not_found_message: string = "No Matching Results"
     const getCourseSuggestions = (searchText: string) => {

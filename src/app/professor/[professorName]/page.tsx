@@ -21,7 +21,7 @@ export default function Page({ params } : { params: {professorName: string} }) {
         }
       }
       fetchCoursesTaught()
-    }, [])
+    }, [apiURL])
   return (
     <>
       {error ? (

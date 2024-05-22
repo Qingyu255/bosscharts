@@ -176,7 +176,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         }
 
         fetchInstructorsWhoTeachCourseCode()
-    }, [])
+    }, [apiURL, courseCode])
 
     useEffect(() => {
         if (chartDataAcrossBiddingWindow) {

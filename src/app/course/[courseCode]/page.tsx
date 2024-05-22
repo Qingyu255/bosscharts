@@ -92,7 +92,7 @@ export default function Page({ params } : {params: {courseCode: string}}) {
         fetchCourseName()
         fetchCourseMinMaxMeanMedianMedianData()
         fetch_all_instructor_median_median_bid_by_course_code()
-    }, [courseCode]);
+    }, [courseCode, apiURL]);
 
     useEffect(() => {
         const handleResize = () => {

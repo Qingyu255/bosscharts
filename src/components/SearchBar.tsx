@@ -22,7 +22,7 @@ export default function SearchBar({ search }: { search?: string }) {
             setUniqueCourses(jsonPayload.data)
         }
         fetchAllCourseCodes()
-    }, [])
+    }, [apiURL])
 
     const search_not_found_message: string = "course code not found"
     const getSuggestions = (searchText: string) => {

@@ -155,7 +155,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
             }
         }
         fetch_instructors_who_teach_course_code()
-    }, [])
+    }, [apiURL, courseCode])
 
     useEffect(() => {
         // to load chart on first page load

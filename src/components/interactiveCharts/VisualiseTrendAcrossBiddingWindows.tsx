@@ -156,7 +156,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         }
 
         fetchInstructorsWhoTeachCourseCode()
-    }, [])
+    }, [apiURL, courseCode])
 
     useEffect(() => {
         // to load chart on first page load
