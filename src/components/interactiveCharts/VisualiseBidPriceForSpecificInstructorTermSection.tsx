@@ -188,7 +188,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         <>
             <h1 id="VisualiseBidPriceForSpecificInstructorTermSection" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Across Bidding Windows For Specified Term and Section</h1>
             {error ? (
-                <ErrorPopUp error={error}></ErrorPopUp>
+                <ErrorPopUp error={error}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
@@ -198,8 +198,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
                             showFirstOption={false}
-                        >
-                        </DropDown>
+                        />
 
                     {(isTermDropdownVisible && termDropdownArr.length > 0) && (
                         <DropDown 
@@ -207,8 +206,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                             onSelect={handleTermSelect}
                             options={termDropdownArr}
                             showFirstOption={false}
-                        >
-                        </DropDown>
+                        />
                     )}
                     {(isSectionDropdownVisible && sectionDropdownArr.length > 0) && (
                         <DropDown 
@@ -216,8 +214,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                             onSelect={handleSectionSelect}
                             options={sectionDropdownArr}
                             showFirstOption={false}
-                        >
-                        </DropDown>
+                        />
                     )}
                     </div>
                     {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (

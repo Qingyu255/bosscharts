@@ -119,7 +119,7 @@ export default function Page({ params } : {params: {courseCode: string}}) {
             <div className='flex flex-col px-5 md:px-20 lg:px-32 xl:px-40 2xl:px-96'>
                 <p className='px-4 md:px-8 py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>COURSE CODE: {courseCode} ({courseName})</p>
                 {error ? (
-                    <ErrorPopUp error={error}></ErrorPopUp>
+                    <ErrorPopUp error={error}/>
                 ) 
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
@@ -151,20 +151,20 @@ export default function Page({ params } : {params: {courseCode: string}}) {
                                 <VisualiseTrendAcrossSemesters 
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}>
-                                </VisualiseTrendAcrossSemesters>
+                                    height={chartWidthHeightArr[1]}
+                                />
 
                                 <VisualiseTrendAcrossBiddingWindows
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}>
-                                </VisualiseTrendAcrossBiddingWindows>
+                                    height={chartWidthHeightArr[1]}
+                                />
 
                                 <VisualiseBidPriceForSpecificInstructorTermSection
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}>
-                                </VisualiseBidPriceForSpecificInstructorTermSection>
+                                    height={chartWidthHeightArr[1]}
+                                />
                             </div>
                         </div>
                     </>

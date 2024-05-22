@@ -174,7 +174,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         <>
             <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Specified Window</h1>
             {error ? (
-                <ErrorPopUp error={error}></ErrorPopUp>
+                <ErrorPopUp error={error}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
@@ -183,16 +183,14 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
-                        >
-                        </DropDown>
+                        />
                     
                     {(isBiddingWindowDropdownVisible && biddingWindowDropdownArr.length > 0) && (
                         <DropDown 
                             category='Bidding Window'
                             onSelect={handleBiddingWindowSelect}
                             options={biddingWindowDropdownArr}
-                        >
-                        </DropDown>
+                        />
                     )}
                     </div>
                     {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) ? (

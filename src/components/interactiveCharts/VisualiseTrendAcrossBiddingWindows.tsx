@@ -175,7 +175,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         <>
             <h1 id="VisualiseTrendAcrossBiddingWindows" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Bidding Windows For Specified Term</h1>
             {error ? (
-                <ErrorPopUp error={error}></ErrorPopUp>
+                <ErrorPopUp error={error}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
@@ -184,16 +184,14 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
-                        >
-                        </DropDown>
+                        />
                     
                     {(isTermDropdownVisible && termDropdownArr.length > 0) && (
                         <DropDown 
                             category='Term'
                             onSelect={handleTermSelect}
                             options={termDropdownArr}
-                        >
-                        </DropDown>
+                        />
                     )}
                     </div>
                     {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (
