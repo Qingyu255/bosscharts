@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import SearchBar from "./SearchBar"
 
 export default function Navbar() {
-    const siteName = "BOSS CHARTS"
+    const siteName = "SMU BOSS CHARTS"
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
     const [displaySearchBox, setDisplaySearchBox] = useState<boolean>(false)
     const pathName = usePathname()
