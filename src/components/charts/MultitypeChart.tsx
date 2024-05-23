@@ -12,7 +12,8 @@ import {
   Legend,
   LineController,
   BarController,
-  ChartOptions
+  ChartOptions,
+  elements
 } from "chart.js"
 import { Chart }  from 'react-chartjs-2'
 import { ChartType } from 'chart.js'
@@ -58,6 +59,11 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
   const chartType: ChartType = "line" 
   const options = {
     maintainAspectRatio: false,
+    elements: {
+      bar: {
+        borderRadius: 8
+      }
+    },
     tooltips: {
       enabled: true,
       mode: 'label' as const,

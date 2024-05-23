@@ -17,9 +17,14 @@ export default function SearchBar({ search }: { search?: string }) {
 
     useEffect(() => {
         const fetchAllCourseCodes = async() => {
-            const response = await fetch(`${apiURL}/uniquecourses`)
-            const jsonPayload = await response.json()
-            setUniqueCourses(jsonPayload.data)
+            try {
+                const response = await fetch(`${apiURL}/uniquecourses`)
+                const jsonPayload = await response.json()
+                setUniqueCourses(jsonPayload.data)
+            } catch (error: any) {
+                console.log(error)
+            }
+            
         }
         fetchAllCourseCodes()
     }, [apiURL])

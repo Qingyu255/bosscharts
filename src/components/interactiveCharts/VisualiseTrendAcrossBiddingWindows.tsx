@@ -88,8 +88,10 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
             if (chartDataInstructorsBiddingWindow && chartDataInstructorsBiddingWindow.chartData) {
                 // this makes sure datasets is defined and is an array
                 // const currentDatasets = chartDataInstructorsBiddingWindow.chartData.datasets || []
+                
                 const firstDatasetUpdated = {
                     ...chartDataInstructorsBiddingWindow.chartData.datasets[0],
+                    
                     type: 'line',
                     yAxisID: "y"
                 }
@@ -100,6 +102,25 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
+                // // added in logic to break up bidding window label for incoming freshmen or exchange windows as they are too long (in mobile view port)
+                // let labelsTemp = chartDataInstructorsBiddingWindow.chartData.labels
+                // try {
+                //     for (let i = 0; i < labelsTemp.length; i++) {
+                //         const label = labelsTemp[i].toLowerCase()
+                //         if (label.includes("Incoming Exchange ")) {
+                //             const round_string = label.split("Incoming Exchange ")[0]
+                //             labelsTemp[i] = "Inc Exc " + round_string
+                //         } 
+                //         // else if (label.toLowerCase().includes("Incoming Freshmen ")) {
+                //         //     const round_string = label.split("Incoming Freshmen ")[0]
+                //         //     labelsTemp[i] = "Inc Freshie " + round_string
+                //         // }
+                //     }
+                // } catch (error: any) {
+                //     console.log(error)
+                // }
+                
+                // setChartDataAcrossBiddingWindow(brokeUpLongWindowLabelStrings)
                 setChartDataAcrossBiddingWindow(updatedVacanciesInChartData)
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")

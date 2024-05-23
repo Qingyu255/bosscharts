@@ -67,7 +67,7 @@ export default function DropDown( props : DropdownProps ) {
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions" className="gap-y-2">
                 {options.map((option, index) => (
-                    <DropdownItem key={index + 1} onClick={() => selectionHandler(option)}>
+                    <DropdownItem key={index + 1} onPointerDown={() => selectionHandler(option)}>
                         {/* block: Full Width: Block-level elements expand to occupy the full width of their containing block. This means that they stretch from the left edge to the right edge of their parent container. */}
                         <div className="block w-full p-1" style={{
                                 whiteSpace: 'normal',

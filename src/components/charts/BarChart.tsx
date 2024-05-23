@@ -8,7 +8,8 @@ import {
   BarController,
   BarElement,
   Title,
-  Legend
+  Legend,
+  elements
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
@@ -84,6 +85,11 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
 
   const options = {
     maintainAspectRatio: false,
+    elements: {
+      bar: {
+        borderRadius: 8
+      }
+    },
     plugins: {
       legend: {
         position: 'top' as const,
