@@ -3,20 +3,21 @@ const nextConfig = {
     experimental: { 
         serverActions: true,
     },
+    async redirects() {
+        return [
+          {
+            source: '/(.*)',
+            has: [
+              {
+                type: 'host',
+                value: 'smubosscharts.com',
+              },
+            ],
+            destination: 'https://www.smubosscharts.com/:path*',
+            permanent: true,
+          },
+        ]
+      },
 }
 
 module.exports = nextConfig
-
-// routes from root to course/COR-STAT1202 (technically my home page, for now) 
-// choose stats as 'home' only cause its popular
-// module.exports = {
-//     async redirects() {
-//       return [
-//         {
-//           source: '/',
-//           destination: '/course/COR-STAT1202',
-//           permanent: true,
-//         },
-//       ]
-//     },
-//   }
