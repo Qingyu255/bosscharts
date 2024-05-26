@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'SMU BOSS Charts',
-  description: 'SMU Boss Bidding Charts - Visualise Bid Price History and Analyse Detailed Bid Price Trends For Any Course',
+  description: 'SMU (Singapore Management University) Boss Bidding Charts - Visualise Bid Price History and Analyse Detailed Bid Price Trends For Any Course. View historic bid prices by course, professors and section.',
   icons: {
     icon: "/logo.png"
   }
