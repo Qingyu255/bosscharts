@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import SearchBar from "./SearchBar"
+import handleMobileWebShare from "@/utils/handleMobileWebshare"
 
 export default function Navbar() {
     const siteName = "SMU BOSS CHARTS"
@@ -11,7 +12,12 @@ export default function Navbar() {
     const [displaySearchBox, setDisplaySearchBox] = useState<boolean>(false)
     const pathName = usePathname()
     const sidebarRef = useRef<HTMLDivElement>(null)
+    const [isWebShareSupported, setIsWebShareSupported] = useState<boolean>(false)
 
+    useEffect(() => {
+      setIsWebShareSupported(!!navigator.share)
+    }, [])
+  
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen)
     }
@@ -65,6 +71,10 @@ export default function Navbar() {
                         <div className="hidden sm:flex flex-row items-center gap-x-3 font-medium bg-white z-10 px-3 text-sm">
                             <Link href="/">HOME</Link>
                             <Link href="/about">ABOUT</Link>
+                            {isWebShareSupported ?? (
+                                <div onClick={handleMobileWebShare}>SHARE</div>
+                            )}
+                            {/* <div onClick={handleMobileWebShare}>SHARE</div> */}
                         </div>
 
                     <div className="sm:hidden flex items-center px-2 pr-2.5 md:px-4 text-[11px] md:text-sm font-medium">
@@ -87,6 +97,9 @@ export default function Navbar() {
                     </li>
                     <li><Link href="/" onClick={toggleSidebar}>Home</Link></li>
                     <li><Link href="/about" onClick={toggleSidebar}>About</Link></li>
+                    {isWebShareSupported ?? (
+                        <li onClick={handleMobileWebShare}>Share Site</li>
+                    )}
                 </ul>
             </div>
             
