@@ -71,7 +71,7 @@ export default function Navbar() {
                         <div className="hidden sm:flex flex-row items-center gap-x-3 font-medium bg-white z-10 px-3 text-sm">
                             <Link href="/">HOME</Link>
                             <Link href="/about">ABOUT</Link>
-                            {isWebShareSupported ?? (
+                            {isWebShareSupported && (
                                 <div onClick={handleMobileWebShare}>SHARE</div>
                             )}
                             {/* <div onClick={handleMobileWebShare}>SHARE</div> */}
@@ -97,7 +97,7 @@ export default function Navbar() {
                     </li>
                     <li><Link href="/" onClick={toggleSidebar}>Home</Link></li>
                     <li><Link href="/about" onClick={toggleSidebar}>About</Link></li>
-                    {isWebShareSupported ?? (
+                    {isWebShareSupported && (
                         <li onClick={handleMobileWebShare}>Share Site</li>
                     )}
                 </ul>
