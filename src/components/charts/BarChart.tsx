@@ -55,7 +55,7 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
     }
     
     const chart = elements[0].element.$context.chart
-    if (chart.options.plugins.title.text !== "Median and Mean 'Median Bid' Price against Instructors (across all sections for Round 1 Window 1 from AY 2019/20 onwards)") {
+    if (chart.options.plugins.title.text !== "Median and Mean 'Median Bid' Price against Instructors (across all sections and windows for Round 1 Window 1 from AY 2019/20 onwards)") {
       return
       // as we only want double click functionality for the above title
     }

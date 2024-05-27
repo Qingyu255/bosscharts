@@ -200,6 +200,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
+                    <p className='text-gray-500 text-xs sm:text-sm'>select instructor and term:</p>
                     <div className='flex flex-row justify-left items-center gap-x-5'>
                         <DropDown 
                             category='Instructor'

@@ -116,8 +116,8 @@ export default function Page({ params } : {params: {courseCode: string}}) {
 
     return (
         <>
-            <div className='flex flex-col px-5 md:px-20 lg:px-32 xl:px-40 2xl:px-96'>
-                <p className='px-4 md:px-8 py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>COURSE CODE: {courseCode} ({courseName})</p>
+            <div className='flex flex-col px-5 md:px-20 lg:px-32 xl:px-40 2xl:px-96 pb-5'>
+                <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>COURSE CODE: {courseCode} ({courseName})</p>
                 {error ? (
                     <ErrorPopUp error={error}/>
                 ) 
@@ -129,15 +129,7 @@ export default function Page({ params } : {params: {courseCode: string}}) {
                             </button>
                         )}
                         <div className='flex flex-col gap-y-5'>
-                            <BarChart 
-                                title={chartDataOverview.title} 
-                                chartData={chartDataOverview.chartData} 
-                                width={chartWidthHeightArr[0]} 
-                                height={chartWidthHeightArr[1]}
-                                key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-1`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
-                                // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
-                            />
-                            <div className=' flex flex-col'>
+                            <div className='flex flex-col'>
                                 <BarChart
                                     title={chartDataInstructorOverview.title} 
                                     chartData={chartDataInstructorOverview.chartData} 
@@ -147,25 +139,34 @@ export default function Page({ params } : {params: {courseCode: string}}) {
                                 />
                                 <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor&apos;s Afterclass reviews (if it exists)</p>
                             </div>
+                            <hr></hr>
                             <div>
-                                <VisualiseTrendAcrossSemesters 
-                                    courseCode={courseCode} 
-                                    width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}
-                                />
-
-                                <VisualiseTrendAcrossBiddingWindows
-                                    courseCode={courseCode} 
-                                    width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}
-                                />
-
                                 <VisualiseBidPriceForSpecificInstructorTermSection
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}
                                 />
+                                <VisualiseTrendAcrossSemesters 
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}
+                                />
+                                <VisualiseTrendAcrossBiddingWindows
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}
+                                />
                             </div>
+                            <hr></hr>
+                            <h1 className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Overview for {courseCode}</h1>
+                            <BarChart 
+                                title={chartDataOverview.title} 
+                                chartData={chartDataOverview.chartData} 
+                                width={chartWidthHeightArr[0]} 
+                                height={chartWidthHeightArr[1]}
+                                key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-1`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
+                                // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
+                            />
                         </div>
                     </>
                 ) : (
