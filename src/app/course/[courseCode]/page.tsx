@@ -124,7 +124,7 @@ export default function Page({ params } : {params: {courseCode: string}}) {
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
                         {isSCISCourse && (
-                            <button onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left mx-4 md:mx-8 p-1 px-1.5 border-2 w-fit rounded-xl hover:bg-gray-200 text-xs sm:text-sm'>
+                            <button onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 border-2 w-fit rounded-xl hover:bg-gray-200 text-xs sm:text-sm'>
                                 View Course Information
                             </button>
                         )}
